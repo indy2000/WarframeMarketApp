@@ -1,46 +1,50 @@
 package com.fukajima.warframemarket
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.fukajima.warframemarket.ui.theme.WarframeMarketTheme
+import com.fukajima.warframemarket.fragments.Fragment_Market
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
+    lateinit var navigation: BottomNavigationView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            WarframeMarketTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting("Android")
+        setContentView(R.layout.main)
+
+        navigation = findViewById(R.id.main_bottom_nav)
+        navigation.setOnItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.nav_menu_market -> {
+                    supportFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.main_linear, Fragment_Market(), "FRAG_MARKET")
+                        .commit()
+                    return@setOnItemSelectedListener true
+                }
+                R.id.nav_menu_contracts -> {
+                    Toast.makeText(this@MainActivity, "Not Implemented", Toast.LENGTH_SHORT).show()
+                    return@setOnItemSelectedListener true
+                }
+                R.id.nav_menu_profile -> {
+                    Toast.makeText(this@MainActivity, "Not Implemented", Toast.LENGTH_SHORT).show()
+                    return@setOnItemSelectedListener true
+                }
+                else -> {
+                    supportFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.main_linear, Fragment_Market(), "FRAG_MARKET")
+                        .commit()
+                    return@setOnItemSelectedListener true
                 }
             }
         }
+        navigation.selectedItemId = R.id.nav_menu_market
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    WarframeMarketTheme {
-        Greeting("Android")
-    }
-}
