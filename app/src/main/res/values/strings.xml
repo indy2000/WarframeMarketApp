@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Warframe Market</string>
+    <string name="warframe_capital">WARFRAME 8 MARKET</string>
+    <string name="home">Home</string>
+    <string name="market">Market</string>
+    <string name="search_item_name">Busque pelo nome do item</string>
+    <string name="search">Buscar…</string>
+    <string name="contracts">Contracts</string>
+    <string name="profile">Profile</string>
 </resources>
