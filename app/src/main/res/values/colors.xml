@@ -14,4 +14,13 @@
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#828282</color>
 
+    <color name="pink">#c34898</color>
+    <color name="grey_item_quantity">#696e70</color>
+    <color name="red">#696e70</color>
+    <color name="green_user_online">#035c04</color>
+    <color name="grey_reputation">#657f86</color>
+    <color name="green_high_reputation">#01a268</color>
+    <color name="orange">#b53600</color>
+    <color name="site_background">#101619</color>
+
 </resources>

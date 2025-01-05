@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="8dp"
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="true"
+    android:clickable="true"
+    android:id="@+id/card_view_frag_contracts"
+    android:backgroundTint="@color/background_color">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="5dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="parent">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/logo_alpha"
+            android:id="@+id/image_view_card_contracts"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="parent">
+
+        </ImageView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Item"
+            android:textColor="@color/asset_teal"
+            android:id="@+id/txt_view_contracts_item_name"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/view1_card_contracts"
+            app:layout_constraintStart_toEndOf="@+id/image_view_card_contracts"
+            android:paddingHorizontal="5dp">
+
+        </TextView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/asset_teal"
+            app:layout_constraintTop_toBottomOf="@+id/image_view_card_contracts"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:id="@+id/view1_card_contracts"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Damage"
+            android:textColor="@color/green_high_reputation"
+            android:id="@+id/txt_view_card_contracts_att1"
+            app:layout_constraintTop_toBottomOf="@id/view1_card_contracts"
+            app:layout_constraintTop_toTopOf="@+id/view1_card_contracts"
+            app:layout_constraintStart_toStartOf="parent"
+            android:paddingRight="20dp"
+            android:layout_marginTop="10dp">
+
+        </TextView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Penetration"
+            android:textColor="@color/green_high_reputation"
+            android:id="@+id/txt_view_card_contracts_att2"
+            app:layout_constraintTop_toBottomOf="@id/view1_card_contracts"
+            app:layout_constraintTop_toTopOf="@+id/view1_card_contracts"
+            app:layout_constraintStart_toEndOf="@id/txt_view_card_contracts_att1"
+            android:paddingRight="20dp"
+            android:layout_marginTop="10dp">
+
+        </TextView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Critical Chance"
+            android:textColor="@color/green_high_reputation"
+            android:id="@+id/txt_view_card_contracts_att3"
+            app:layout_constraintTop_toBottomOf="@id/txt_view_card_contracts_att1"
+            app:layout_constraintStart_toStartOf="parent"
+            android:paddingRight="20dp">
+
+        </TextView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Status Chance"
+            android:textColor="@color/green_high_reputation"
+            android:id="@+id/txt_view_card_contracts_att4"
+            app:layout_constraintTop_toBottomOf="@id/txt_view_card_contracts_att2"
+            app:layout_constraintStart_toEndOf="@id/txt_view_card_contracts_att3">
+
+        </TextView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Selling price:"
+            android:textColor="@color/grey_reputation"
+            app:layout_constraintStart_toEndOf="@+id/txt_view_card_contracts_att2"
+            app:layout_constraintTop_toTopOf="@id/view1_card_contracts"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/txt_view_card_contracts_sell_lable"
+            android:paddingRight="5dp"
+            android:layout_marginTop="10dp">
+
+        </TextView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10"
+            android:textColor="@color/grey_item_quantity"
+            app:layout_constraintStart_toEndOf="@+id/txt_view_card_contracts_sell_lable"
+            app:layout_constraintTop_toTopOf="@id/view1_card_contracts"
+            android:paddingRight="5dp"
+            android:id="@+id/txt_view_card_contracts_price"
+            android:layout_marginTop="10dp">
+
+        </TextView>
+
+        <ImageView
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:src="@drawable/ic_coin"
+            app:tint="@color/grey_item_quantity"
+            app:layout_constraintStart_toEndOf="@+id/txt_view_card_contracts_price"
+            app:layout_constraintTop_toBottomOf="@id/view1_card_contracts"
+            android:layout_marginTop="10dp">
+
+        </ImageView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mr."
+            android:textColor="@color/green_high_reputation"
+            app:layout_constraintTop_toBottomOf="@+id/txt_view_card_contracts_att3"
+            android:id="@+id/txt_view_card_contracts_mr"
+            android:paddingRight="5dp">
+
+        </TextView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="16"
+            android:textColor="@color/green_high_reputation"
+            app:layout_constraintTop_toBottomOf="@+id/txt_view_card_contracts_att3"
+            app:layout_constraintStart_toEndOf="@+id/txt_view_card_contracts_mr"
+            android:id="@+id/txt_view_card_contracts_mr_number"
+            android:paddingRight="20dp">
+        </TextView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ranks:"
+            android:textColor="@color/green_high_reputation"
+            app:layout_constraintTop_toBottomOf="@+id/txt_view_card_contracts_att3"
+            app:layout_constraintStart_toEndOf="@+id/txt_view_card_contracts_mr_number"
+            android:id="@+id/txt_view_card_contracts_rank"
+            android:paddingRight="5dp">
+
+        </TextView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="16"
+            android:textColor="@color/green_high_reputation"
+            app:layout_constraintTop_toBottomOf="@+id/txt_view_card_contracts_att3"
+            app:layout_constraintStart_toEndOf="@+id/txt_view_card_contracts_rank"
+            android:id="@+id/txt_view_card_contracts_rank_number"
+            android:paddingRight="20dp">
+        </TextView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Re-rolls:"
+            android:textColor="@color/green_high_reputation"
+            app:layout_constraintTop_toBottomOf="@+id/txt_view_card_contracts_att3"
+            app:layout_constraintStart_toEndOf="@+id/txt_view_card_contracts_rank_number"
+            android:id="@+id/txt_view_card_contracts_reroll"
+            android:paddingRight="5dp">
+
+        </TextView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="16"
+            android:textColor="@color/green_high_reputation"
+            app:layout_constraintTop_toBottomOf="@+id/txt_view_card_contracts_att3"
+            app:layout_constraintStart_toEndOf="@+id/txt_view_card_contracts_reroll"
+            android:id="@+id/txt_view_card_contracts_reroll_number"
+            android:paddingRight="20dp">
+        </TextView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Polarity:"
+            android:textColor="@color/green_high_reputation"
+            app:layout_constraintTop_toBottomOf="@+id/txt_view_card_contracts_att3"
+            app:layout_constraintStart_toEndOf="@+id/txt_view_card_contracts_reroll_number"
+            android:id="@+id/txt_view_card_contracts_polarity"
+            android:paddingRight="5dp">
+
+        </TextView>
+
+        <ImageView
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:text="16"
+            android:textColor="@color/green_high_reputation"
+            app:layout_constraintTop_toBottomOf="@+id/txt_view_card_contracts_sell_lable"
+            app:layout_constraintStart_toEndOf="@+id/txt_view_card_contracts_polarity"
+            app:layout_constraintBottom_toTopOf="@+id/view2_card_contracts"
+            android:id="@+id/image_view_card_contracts_polarity"
+            android:src="@drawable/logo_alpha">
+        </ImageView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/asset_teal"
+            app:layout_constraintTop_toBottomOf="@+id/txt_view_card_contracts_mr"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:id="@+id/view2_card_contracts"/>
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/logo_alpha"
+            android:id="@+id/image_view_card_contracts_perfil"
+            app:layout_constraintTop_toBottomOf="@+id/view2_card_contracts"
+            android:layout_marginTop="10dp">
+
+        </ImageView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="username"
+            android:textColor="@color/asset_teal"
+            android:textSize=""
+            android:layout_gravity="center"
+            android:paddingHorizontal="5dp"
+            android:id="@+id/txt_view_card_contracts_userName"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/view2_card_contracts"
+            app:layout_constraintStart_toEndOf="@+id/image_view_card_contracts_perfil">
+
+        </TextView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="username"
+            android:textColor="@color/asset_purple"
+            android:textSize=""
+            android:layout_gravity="center"
+            android:paddingHorizontal="5dp"
+            android:id="@+id/txt_view_card_contracts_userStatus"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/view2_card_contracts"
+            app:layout_constraintStart_toEndOf="@+id/txt_view_card_contracts_userName">
+
+        </TextView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textColor="@color/grey_reputation"
+            android:textSize=""
+            android:layout_gravity="center"
+            android:paddingHorizontal="5dp"
+            android:id="@+id/txt_view_card_contracts_userReputation"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/view2_card_contracts"
+            app:layout_constraintStart_toEndOf="@+id/txt_view_card_contracts_userStatus">
+
+        </TextView>
+
+        <ImageView
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:src="@drawable/ic_reputation_happy"
+            app:tint="@color/grey_reputation"
+            android:id="@+id/image_view_card_contracts_userReputation"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/view2_card_contracts"
+            app:layout_constraintStart_toEndOf="@+id/txt_view_card_contracts_userReputation">
+
+        </ImageView>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>
