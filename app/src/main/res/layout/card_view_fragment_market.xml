@@ -130,7 +130,6 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_orientation="horizontal"
             android:layout_gravity="right"
             android:paddingRight="9dp"
             android:clickable="true"
