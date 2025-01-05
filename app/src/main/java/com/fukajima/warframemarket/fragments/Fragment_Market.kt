@@ -36,7 +36,6 @@ class Fragment_Market : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    private var searchView: SearchView? = null
     private var searchSpinner: CustomSpinner? = null
     private var itemList: List<Item> = mutableListOf()
 
@@ -54,11 +53,6 @@ class Fragment_Market : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        searchView = view.findViewById<SearchView>(R.id.market_searchview)
-        searchView?.setOnSearchClickListener() {
-            searchItems()
-        }
 
         searchSpinner = view.findViewById<CustomSpinner>(R.id.market_searchSpinner)
         searchSpinner?.setAdapter("id", arrayOf("item_name"), mutableListOf<Item>())

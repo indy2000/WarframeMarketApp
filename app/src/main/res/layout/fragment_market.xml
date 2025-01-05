@@ -13,14 +13,6 @@
         android:paddingHorizontal="0dp"
         android:paddingVertical="20dp">
 
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/market_searchview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/search">
-
-        </androidx.appcompat.widget.SearchView>
-
         <com.fukajima.warframemarket.components.CustomSpinner
             android:id="@+id/market_searchSpinner"
             android:layout_width="match_parent"
@@ -28,7 +20,8 @@
             android:layout_marginBottom="10dp"
             app:searchDialog="true"
             app:titleText="@string/items"
-            app:hintText="@string/search_item_name">
+            app:hintText="@string/search_item_name"
+            android:paddingHorizontal="15dp">
 
         </com.fukajima.warframemarket.components.CustomSpinner>
 
