@@ -30,4 +30,8 @@ class ItemOrderUser {
     var id: String? = null
     var region: String? = null
     var status: String? = null
+
+    fun getAvatarAssetUrl() : String? {
+        return if(!this.avatar.isNullOrEmpty()) "https://warframe.market/static/assets/${this.avatar}" else null
+    }
 }

@@ -13,5 +13,9 @@ class Item {
     var item_name: String? = null
     var url_name: String? = null
     var id: String? = null
+
+    fun getItemAssetUrl() : String? {
+        return if(!this.thumb.isNullOrEmpty()) "https://warframe.market/static/assets/${this.thumb}" else null
+    }
 }
 
