@@ -15,7 +15,24 @@
         android:orientation="horizontal"
         app:titleTextAppearance="@style/WarframeTextAppearance"
         app:layout_constraintTop_toTopOf="parent"
-        app:titleTextColor="@color/white"/>
+        app:titleTextColor="@color/white">
+
+        <ImageButton
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/login_button_tb"
+            android:layout_gravity="end"
+            android:src="@drawable/ic_login"
+            app:tint="@color/asset_teal"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:backgroundTint="@color/background_color"
+            android:contentDescription="@string/login"
+            >
+
+        </ImageButton>
+
+    </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
         android:id="@+id/main_linear"
