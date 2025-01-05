@@ -9,7 +9,9 @@
     <LinearLayout
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingHorizontal="0dp"
+        android:paddingVertical="20dp">
 
         <androidx.appcompat.widget.SearchView
             android:layout_width="match_parent"
@@ -57,7 +59,9 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:id="@+id/recycler_view_frag_market"
+            tools:listitem="@layout/card_view_fragment_market">
 
         </androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>
