@@ -7,4 +7,9 @@
     <string name="search">Buscar…</string>
     <string name="contracts">Contracts</string>
     <string name="profile">Profile</string>
+    <string name="select">Select</string>
+    <string name="eh_necesario_selecionar">É necessário selecionar %s</string>
+    <string name="sync">Synchonize</string>
+    <string name="item_ja_existe">Item já existe</string>
+    <string name="necessario_informar_item">Necessário informar item</string>
 </resources>
