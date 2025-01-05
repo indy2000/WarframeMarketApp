@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Warframe Market"
 include(":app")
+include(":warframerepo")
