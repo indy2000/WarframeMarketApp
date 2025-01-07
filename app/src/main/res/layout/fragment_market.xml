@@ -66,12 +66,27 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/recycler_view_frag_market"
-            tools:listitem="@layout/card_view_fragment_market">
+            tools:listitem="@layout/card_view_fragment_market"
+            android:visibility="gone">
 
         </androidx.recyclerview.widget.RecyclerView>
+
+
+
     </LinearLayout>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="30dp"
+        android:src="@drawable/ic_add"
+        android:backgroundTint="@color/orange"
+        app:tint="@color/white"
+        android:id="@+id/float_act_btn_fragment_market"
+        android:contentDescription="@string/place_order">
 
+    </com.google.android.material.floatingactionbutton.FloatingActionButton>
 
 
 </FrameLayout>
