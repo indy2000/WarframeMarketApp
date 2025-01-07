@@ -47,7 +47,7 @@ class Remote(var context: Context) {
 
     fun getOrdersByItem(item_url_name: String) : Response<List<ItemOrder>>{
         var response: Response<List<ItemOrder>> = Response<List<ItemOrder>>()
-        val type = TypeToken.get(ItemsResponse::class.java).type
+        val type = TypeToken.get(ItemOrdersResponse::class.java).type
         var url = "$apiBaseUrl/items/$item_url_name/orders"
 
         try {
