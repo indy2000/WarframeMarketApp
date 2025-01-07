@@ -30,6 +30,7 @@ public class CustomSpinner extends AppCompatSpinner {
     private String hint = "";
     private boolean insert = false;
     private CustomSpinner.OnItemSearch callBack;
+    private CustomSpinner.OnItemSelected callBackItemSelected;
     private OnNewValue callBackNew;
     private DialogCustomSpinner lDialog = null;
 
@@ -271,11 +272,16 @@ public class CustomSpinner extends AppCompatSpinner {
         callBack = busca;
     }
 
+    public void setOnItemSelected(CustomSpinner.OnItemSelected itemSelecionado) {
+        callBackItemSelected = itemSelecionado;
+    }
+
     private DialogCustomSpinner.OnItemSelectedListener dialog_callback() {
         return new DialogCustomSpinner.OnItemSelectedListener() {
             @Override
             public void onItemSelected(int position) {
                 setSelection(position);
+                callBackItemSelected.onItemSelected(position);
             }
 
             @Override
@@ -320,6 +326,10 @@ public class CustomSpinner extends AppCompatSpinner {
 
     public interface OnItemSearch {
         List<?> onSearch(String busca, List<?> lista, ListView setar) throws Exception;
+    }
+
+    public interface OnItemSelected {
+        int onItemSelected(int position);
     }
 
     public interface OnNewValue {
