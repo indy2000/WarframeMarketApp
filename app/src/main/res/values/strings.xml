@@ -14,4 +14,6 @@
     <string name="necessario_informar_item">Necessário informar item</string>
     <string name="login">Login</string>
     <string name="items">Items</string>
+    <string name="no_results_returned">No results returned</string>
+    <string name="error_ocurred_while_returning_results">An error ocurred while returning results</string>
 </resources>
