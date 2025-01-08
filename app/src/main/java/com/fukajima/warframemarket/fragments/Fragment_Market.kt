@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ListView
+import android.widget.ProgressBar
 import android.widget.SpinnerAdapter
 import android.widget.TextView
 import android.widget.Toast
@@ -20,6 +21,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.fukajima.warframemarket.R
 import com.fukajima.warframemarket.components.CustomSpinner
 import com.fukajima.warframerepo.entity.Item
@@ -51,6 +53,8 @@ class Fragment_Market : Fragment() {
     private var searchSpinner: CustomSpinner? = null
     private var itemList: List<Item> = mutableListOf()
     private var recyclerView: RecyclerView? = null
+    private var progress: ProgressBar? = null
+    private var shimmerSpinner: ShimmerFrameLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,6 +71,9 @@ class Fragment_Market : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        progress = view.findViewById(R.id.loading_frag_market)
+        shimmerSpinner = view.findViewById(R.id.market_shimmer_spinner)
+
         searchSpinner = view.findViewById<CustomSpinner>(R.id.market_searchSpinner)
         searchSpinner?.setAdapter("id", arrayOf("item_name"), mutableListOf<Item>())
         searchSpinner?.setOnSearch(object : CustomSpinner.OnItemSearch {
@@ -81,19 +88,16 @@ class Fragment_Market : Fragment() {
             override fun onItemSelected(position: Int): Int {
                 var selectedItem = searchSpinner?.selectedItem as Item?
                 selectedItem?.let {
+                    showRecyclerLoading(true)
                     GlobalScope.launch(Dispatchers.IO) {
                         var orderListResponse = ItemRepository(requireContext()).getItemOrders(it.url_name!!)
 
                         if(orderListResponse.success) {
                             withContext(Dispatchers.Main) {
                                 if(!orderListResponse.obj.isNullOrEmpty()) {
-                                    recyclerView?.apply {
-                                        itemAnimator = DefaultItemAnimator()
-                                        setHasFixedSize(true)
-                                        adapter =  MarketAdapter(requireContext(), orderListResponse.obj!!, it)
-                                        layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-                                    }
-                                    recyclerView?.adapter?.notifyDataSetChanged()
+                                    recyclerView?.adapter = MarketAdapter(requireContext(), orderListResponse.obj!!, it)
+                                    showRecyclerLoading(false)
+                                    //recyclerView?.adapter?.notifyDataSetChanged()
                                 }
                                 else {
                                     Toast.makeText(requireContext(), requireContext().getString(R.string.no_results_returned) ,Toast.LENGTH_LONG).show()
@@ -113,16 +117,40 @@ class Fragment_Market : Fragment() {
         })
 
         recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view_frag_market)
+        recyclerView?.apply {
+            itemAnimator = DefaultItemAnimator()
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+            visibility = View.VISIBLE
+        }
+    }
+
+    fun showRecyclerLoading(visible: Boolean) {
+        if(visible){
+            recyclerView?.visibility = View.GONE
+            progress?.visibility = View.VISIBLE
+        }
+        else {
+            recyclerView?.visibility = View.VISIBLE
+            progress?.visibility = View.GONE
+        }
     }
 
     fun searchItems() {
+        //searchSpinner?.visibility = View.GONE
+        //shimmerSpinner?.startShimmer()
         GlobalScope.launch(Dispatchers.IO) {
             val responseApi = ItemRepository(requireContext()).getItems()
             if(responseApi.success) {
                 itemList = responseApi.obj ?: mutableListOf()
 
                 withContext(Dispatchers.Main) {
+                    //searchSpinner?.visibility = View.VISIBLE
                     searchSpinner?.setAdapter("id", arrayOf("item_name"), itemList)
+                    /*shimmerSpinner?.apply {
+                        stopShimmer()
+                        visibility = View.GONE
+                    }*/
                 }
             }
         }
