@@ -17,7 +17,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="5dp">
+        android:padding="10dp"
+        android:id="@+id/linear_layout_card_view_market_father">
 
         <TextView
             android:id="@+id/txt_view_order_type"
@@ -26,7 +27,8 @@
             android:text="wts"
             android:rotation="-90"
             android:layout_gravity="center"
-            android:textColor="@color/green_high_reputation">
+            android:textColor="@color/green_high_reputation"
+            android:paddingRight="5dp">
 
         </TextView>
 
@@ -38,6 +40,16 @@
 
         </ImageView>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,8 +57,10 @@
             android:textColor="@color/asset_teal"
             android:textSize="15sp"
             android:layout_gravity="center"
-            android:paddingHorizontal="5dp"
-            android:id="@+id/txt_view_userName">
+            android:paddingHorizontal="10dp"
+            android:id="@+id/txt_view_userName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
         </TextView>
 
@@ -57,26 +71,38 @@
             android:textColor="@color/asset_purple"
             android:textSize="15sp"
             android:layout_gravity="center"
-            android:paddingHorizontal="5dp"
-            android:id="@+id/txt_view_userStatus">
+            android:paddingHorizontal="10dp"
+            android:id="@+id/txt_view_userStatus"
+            app:layout_constraintTop_toBottomOf="@+id/txt_view_userName"
+            app:layout_constraintStart_toStartOf="parent">
 
         </TextView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="0"
             android:textColor="@color/grey_reputation"
-            android:textSize="12sp"
+            android:textSize="15sp"
             android:layout_gravity="center"
-            android:paddingHorizontal="5dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="5dp"
             android:id="@+id/txt_view_userReputation">
 
         </TextView>
 
         <ImageView
-            android:layout_width="10dp"
-            android:layout_height="10dp"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
             android:src="@drawable/ic_reputation_happy"
             app:tint="@color/grey_reputation"
             android:layout_gravity="center"
@@ -90,16 +116,16 @@
             tools:text="1"
             android:layout_gravity="center"
             android:textColor="@color/pink"
-            android:textSize="12sp"
-            android:paddingLeft="10dp"
-            android:paddingRight="5dp"
+            android:textSize="15sp"
+            android:paddingStart="15dp"
+            android:paddingEnd="5dp"
             android:id="@+id/txt_view_item_price">
 
         </TextView>
 
         <ImageView
-            android:layout_width="10dp"
-            android:layout_height="10dp"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
             android:src="@drawable/ic_coin"
             app:tint="@color/pink"
             android:layout_gravity="center">
@@ -112,65 +138,79 @@
             tools:text="1"
             android:layout_gravity="center"
             android:textColor="@color/grey_item_quantity"
-            android:textSize="12sp"
-            android:paddingLeft="10dp"
-            android:paddingRight="5dp"
+            android:textSize="15sp"
+            android:paddingStart="15dp"
+            android:paddingEnd="5dp"
             android:id="@+id/txt_view_item_quantity">
 
         </TextView>
 
 
         <ImageView
-            android:layout_width="10dp"
-            android:layout_height="10dp"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
             android:src="@drawable/ic_item_quantity"
             app:tint="@color/grey_item_quantity"
             android:layout_gravity="center">
 
         </ImageView>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="right"
-            android:paddingRight="9dp"
-            android:clickable="true"
-            android:id="@+id/const_layout_card_view_market">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:id="@+id/linear_layout_card_view_market_buy_btn">
+                <ImageView
+                    android:layout_width="23dp"
+                    android:layout_height="23dp"
+                    android:layout_gravity="center|bottom"
+                    android:src="@drawable/ic_buy"
+                    app:tint="@color/asset_teal"
+                    android:backgroundTint="@color/background_color"
+                    android:scaleType="fitStart"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@+id/txt_view_buy"
+                    android:adjustViewBounds="true"
+                    android:id="@+id/button_buy"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="5dp">
 
-            <ImageView
-                android:layout_width="23dp"
-                android:layout_height="23dp"
-                android:layout_gravity="center|start"
-                android:src="@drawable/ic_buy"
-                app:tint="@color/asset_teal"
-                android:backgroundTint="@color/background_color"
-                android:scaleType="fitStart"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:adjustViewBounds="true"
-                android:id="@+id/button_buy"
-                app:layout_constraintEnd_toEndOf="@+id/txt_view_buy">
+                </ImageView>
 
-            </ImageView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Buy"
+                    android:textColor="@color/asset_teal"
+                    android:textSize="11sp"
+                    app:layout_constraintTop_toBottomOf="@+id/button_buy"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:id="@+id/txt_view_buy"
+                    android:layout_marginTop="5dp"
+                    android:layout_gravity="center|bottom"
+                    android:layout_marginEnd="5dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Buy"
-                android:textColor="@color/asset_teal"
-                android:textSize="11sp"
-                android:textAlignment="viewEnd"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:id="@+id/txt_view_buy">
+                </TextView>
 
-            </TextView>
+                </LinearLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+
+
+
+
+
+
+
 
 
     </LinearLayout>
+
 
 </androidx.cardview.widget.CardView>

@@ -67,7 +67,8 @@
             android:layout_height="match_parent"
             android:id="@+id/recycler_view_frag_market"
             tools:listitem="@layout/card_view_fragment_market"
-            android:visibility="gone">
+            android:visibility="visible"
+            android:paddingHorizontal="10dp">
 
         </androidx.recyclerview.widget.RecyclerView>
 
@@ -79,7 +80,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:layout_margin="30dp"
+        android:layout_margin="20dp"
         android:src="@drawable/ic_add"
         android:backgroundTint="@color/orange"
         app:tint="@color/white"
