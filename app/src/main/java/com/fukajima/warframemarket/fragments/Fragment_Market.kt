@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.SpinnerAdapter
 import android.widget.TextView
@@ -15,6 +16,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.compose.ui.text.toLowerCase
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,6 +26,7 @@ import com.fukajima.warframerepo.entity.Item
 import com.fukajima.warframerepo.entity.ItemOrder
 import com.fukajima.warframerepo.repository.ItemRepository
 import com.google.gson.Gson
+import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -140,6 +143,60 @@ class Fragment_Market : Fragment() {
             return itemOrders.size
         }
 
+        fun changeReputationColor(reputation:Int?, txtReputation:TextView?, imgViewReputation:ImageView){
+            reputation?.let {
+                when{
+                    reputation < 5 -> {txtReputation?.setTextColor(ContextCompat.getColor(context, R.color.grey_reputation))
+                                    Picasso.get().load(R.drawable.ic_reputaion_apathy).into(imgViewReputation)
+                                    imgViewReputation.setColorFilter(ContextCompat.getColor(context, R.color.grey_reputation))}
+                    reputation >= 5 -> {txtReputation?.setTextColor(ContextCompat.getColor(context, R.color.green_high_reputation))
+                                    Picasso.get().load(R.drawable.ic_reputation_happy).into(imgViewReputation)
+                                    imgViewReputation.setColorFilter(ContextCompat.getColor(context, R.color.green_high_reputation))}
+                    else -> return
+                }
+            }
+
+        }
+
+        fun changeUserStatusColor(status:String?, txtStatus:TextView?){
+            status?.let {
+                when (status) {
+                    "online" -> txtStatus?.setTextColor(ContextCompat.getColor(context, R.color.green_user_online))
+                    "offline" -> txtStatus?.setTextColor(ContextCompat.getColor(context, R.color.red))
+                    "ingame" ->  {txtStatus?.setTextColor(ContextCompat.getColor(context, R.color.asset_purple))
+                                txtStatus?.text = "online in game"}
+                    else -> return
+                }
+            }
+        }
+
+        fun changeOrderTypeColor_Name(orderType:String?, txtOrderType:TextView?){
+            when (orderType) {
+                "sell" ->{ txtOrderType?.text="wts"
+                            txtOrderType?.setTextColor(ContextCompat.getColor(context, R.color.green_high_reputation))}
+                "buy" -> {txtOrderType?.text="wtb"
+                    txtOrderType?.setTextColor(ContextCompat.getColor(context, R.color.pink))}
+                else -> return
+            }
+        }
+
+        fun changeProfilePic(avatar:String?, imgViewProfile:ImageView){
+            if (avatar.isNullOrEmpty())   {
+                Picasso.get()
+                    .load(R.drawable.logo_alpha)
+                    .into(imgViewProfile)
+            }
+            else {
+                Picasso.get()
+                    .load(avatar)
+                    .error(R.drawable.logo_alpha)
+                    .into(imgViewProfile)
+            }
+
+
+        }
+
+
         override fun onBindViewHolder(holder: MarketItemHolder, position: Int) {
             val itemOrder = itemOrders[position]
 
@@ -150,6 +207,11 @@ class Fragment_Market : Fragment() {
             holder.txvUserStatus.text = itemOrder.user?.status.toString()
             holder.txvUserReputation.text = itemOrder.user?.reputation.toString()
 
+            changeReputationColor(itemOrder.user?.reputation, holder.txvUserReputation, holder.imageUserReputation)
+            changeUserStatusColor(itemOrder.user?.status.toString(), holder.txvUserStatus)
+            changeOrderTypeColor_Name(itemOrder.order_type.toString(), holder.txvOrderType)
+            changeProfilePic(itemOrder.user?.getAvatarAssetUrl(), holder.imageUserImage)
+
             holder.btnBuy.setOnClickListener {
                 //TODO: Create clipbboard logic
                 Toast.makeText(context, "/w ${itemOrder.user?.ingame_name.toString()} Hello! I want to buy ${selectedItem.item_name.toString()}!", Toast.LENGTH_LONG).show()
@@ -158,14 +220,14 @@ class Fragment_Market : Fragment() {
         }
         inner class MarketItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val txvOrderType = itemView.findViewById<TextView>(R.id.txt_view_order_type)
-            val imageItemImage = itemView.findViewById<ImageView>(R.id.image_view_card_market)
+            val imageUserImage = itemView.findViewById<ImageView>(R.id.image_view_card_market)
             val txvUsername = itemView.findViewById<TextView>(R.id.txt_view_userName)
             val txvUserStatus = itemView.findViewById<TextView>(R.id.txt_view_userStatus)
             val txvUserReputation = itemView.findViewById<TextView>(R.id.txt_view_userReputation)
             val imageUserReputation = itemView.findViewById<ImageView>(R.id.image_view_userReputation)
             val txvItemPrice = itemView.findViewById<TextView>(R.id.txt_view_item_price)
             val txvItemQuantity = itemView.findViewById<TextView>(R.id.txt_view_item_quantity)
-            val btnBuy = itemView.findViewById<ConstraintLayout>(R.id.const_layout_card_view_market)
+            val btnBuy = itemView.findViewById<LinearLayout>(R.id.linear_layout_card_view_market_buy_btn)
         }
     }
 }
