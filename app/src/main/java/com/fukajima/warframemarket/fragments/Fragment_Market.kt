@@ -55,6 +55,8 @@ class Fragment_Market : Fragment() {
     private var recyclerView: RecyclerView? = null
     private var progress: ProgressBar? = null
     private var shimmerSpinner: ShimmerFrameLayout? = null
+    private var txvItemLabel: TextView? = null
+    private var imageViewItem: ImageView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,6 +75,8 @@ class Fragment_Market : Fragment() {
 
         progress = view.findViewById(R.id.loading_frag_market)
         shimmerSpinner = view.findViewById(R.id.market_shimmer_spinner)
+        txvItemLabel = view.findViewById(R.id.txv_market_item_label)
+        imageViewItem = view.findViewById(R.id.market_iv_item)
 
         searchSpinner = view.findViewById<CustomSpinner>(R.id.market_searchSpinner)
         searchSpinner?.setAdapter("id", arrayOf("item_name"), mutableListOf<Item>())
@@ -97,6 +101,14 @@ class Fragment_Market : Fragment() {
                                 if(!orderListResponse.obj.isNullOrEmpty()) {
                                     recyclerView?.adapter = MarketAdapter(requireContext(), orderListResponse.obj!!, it)
                                     showRecyclerLoading(false)
+
+                                    txvItemLabel?.text = selectedItem.item_name.toString()
+                                    txvItemLabel?.visibility = View.VISIBLE
+                                    Picasso
+                                        .get()
+                                        .load(selectedItem.getItemAssetUrl())
+                                        .into(imageViewItem)
+                                    imageViewItem?.visibility = View.VISIBLE
                                     //recyclerView?.adapter?.notifyDataSetChanged()
                                 }
                                 else {
@@ -128,6 +140,8 @@ class Fragment_Market : Fragment() {
     fun showRecyclerLoading(visible: Boolean) {
         if(visible){
             recyclerView?.visibility = View.GONE
+            txvItemLabel?.visibility = View.INVISIBLE
+            imageViewItem?.visibility = View.INVISIBLE
             progress?.visibility = View.VISIBLE
         }
         else {
