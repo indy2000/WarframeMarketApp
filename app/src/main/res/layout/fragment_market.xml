@@ -13,20 +13,6 @@
         android:paddingHorizontal="0dp"
         android:paddingVertical="20dp">
 
-        <com.facebook.shimmer.ShimmerFrameLayout
-            android:id="@+id/market_shimmer_spinner"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            tools:visibility="gone">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="23dp"
-                android:background="@color/shimmerColor"
-                android:layout_marginBottom="10dp"
-                android:text="@string/search_item_name"
-                android:layout_marginHorizontal="15dp"/>
-        </com.facebook.shimmer.ShimmerFrameLayout>
-
         <com.fukajima.warframemarket.components.CustomSpinner
             android:id="@+id/market_searchSpinner"
             android:layout_width="match_parent"
@@ -35,10 +21,32 @@
             app:searchDialog="true"
             app:titleText="@string/items"
             app:hintText="@string/search_item_name"
-
             android:layout_marginHorizontal="15dp">
 
         </com.fukajima.warframemarket.components.CustomSpinner>
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/market_shimmer_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="57dp"
+            tools:visibility="visible"
+            app:shimmer_auto_start="false">
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="13dp"
+                android:background="@color/asset_teal"
+                android:layout_marginBottom="10dp"
+                android:layout_marginHorizontal="15dp"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="23dp"
+                android:background="@color/asset_teal"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginHorizontal="15dp"
+                />
+        </com.facebook.shimmer.ShimmerFrameLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

@@ -151,20 +151,20 @@ class Fragment_Market : Fragment() {
     }
 
     fun searchItems() {
-        //searchSpinner?.visibility = View.GONE
-        //shimmerSpinner?.startShimmer()
+        searchSpinner?.visibility = View.GONE
+        shimmerSpinner?.startShimmer()
         GlobalScope.launch(Dispatchers.IO) {
             val responseApi = ItemRepository(requireContext()).getItems()
             if(responseApi.success) {
                 itemList = responseApi.obj ?: mutableListOf()
 
                 withContext(Dispatchers.Main) {
-                    //searchSpinner?.visibility = View.VISIBLE
+                    searchSpinner?.visibility = View.VISIBLE
                     searchSpinner?.setAdapter("id", arrayOf("item_name"), itemList)
-                    /*shimmerSpinner?.apply {
+                    shimmerSpinner?.apply {
                         stopShimmer()
                         visibility = View.GONE
-                    }*/
+                    }
                 }
             }
         }
