@@ -12,8 +12,4 @@ class ItemRepository(val context: Context) {
      fun getItems(): Response<List<Item>> {
             return Remote(context).getItems()
      }
-
-    fun getItemOrders(item_url_name: String): Response<List<ItemOrder>> {
-        return Remote(context).getOrdersByItem(item_url_name)
-    }
 }
