@@ -18,12 +18,15 @@ import androidx.appcompat.widget.SearchView
 import androidx.compose.ui.text.toLowerCase
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.fukajima.warframemarket.R
 import com.fukajima.warframemarket.components.CustomSpinner
+import com.fukajima.warframemarket.viewModels.ItemOrderViewModel
+import com.fukajima.warframemarket.viewModels.ItemViewModel
 import com.fukajima.warframerepo.entity.Item
 import com.fukajima.warframerepo.entity.ItemOrder
 import com.fukajima.warframerepo.repository.ItemRepository
@@ -58,6 +61,16 @@ class Fragment_Market : Fragment() {
     private var txvItemLabel: TextView? = null
     private var imageViewItem: ImageView? = null
 
+    private var selectedItem: Item? = null
+
+    private val itemViewModel: ItemViewModel by lazy {
+        ViewModelProvider(this@Fragment_Market).get(ItemViewModel::class.java)
+    }
+
+    private val itemOrderViewModel: ItemOrderViewModel by lazy {
+        ViewModelProvider(this@Fragment_Market).get(ItemOrderViewModel::class.java)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -90,10 +103,11 @@ class Fragment_Market : Fragment() {
 
         searchSpinner?.setOnItemSelected(object: CustomSpinner.OnItemSelected {
             override fun onItemSelected(position: Int): Int {
-                var selectedItem = searchSpinner?.selectedItem as Item?
+                selectedItem = searchSpinner?.selectedItem as Item?
                 selectedItem?.let {
                     showRecyclerLoading(true)
-                    GlobalScope.launch(Dispatchers.IO) {
+                    itemOrderViewModel.getItemOrders(it.url_name!!)
+                    /*GlobalScope.launch(Dispatchers.IO) {
                         var orderListResponse = ItemRepository(requireContext()).getItemOrders(it.url_name!!)
 
                         if(orderListResponse.success) {
@@ -122,7 +136,7 @@ class Fragment_Market : Fragment() {
                                 Log.e(FRAGMENT_MARKET_TAG, orderListResponse.message, orderListResponse.exception)
                             }
                         }
-                    }
+                    }*/
                 }
                 return 0
             }
@@ -134,6 +148,45 @@ class Fragment_Market : Fragment() {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
             visibility = View.VISIBLE
+        }
+
+        itemViewModel.itemLiveData.observe(viewLifecycleOwner) {responseApi ->
+            if(responseApi.success) {
+                itemList = responseApi.obj ?: mutableListOf()
+
+                searchSpinner?.visibility = View.VISIBLE
+                searchSpinner?.setAdapter("id", arrayOf("item_name"), itemList)
+                shimmerSpinner?.apply {
+                    stopShimmer()
+                    visibility = View.GONE
+                }
+            }
+        }
+
+        itemOrderViewModel.itemOrderLiveData.observe(viewLifecycleOwner) { orderListResponse ->
+            if(orderListResponse.success) {
+                if(!orderListResponse.obj.isNullOrEmpty()) {
+                    selectedItem?.let {
+                        recyclerView?.adapter = MarketAdapter(requireContext(), orderListResponse.obj!!, it)
+                        showRecyclerLoading(false)
+
+                        txvItemLabel?.text = it.item_name.toString()
+                        txvItemLabel?.visibility = View.VISIBLE
+                        Picasso
+                            .get()
+                            .load(it.getItemAssetUrl())
+                            .into(imageViewItem)
+                        imageViewItem?.visibility = View.VISIBLE
+                    }
+                }
+                else {
+                    Toast.makeText(requireContext(), requireContext().getString(R.string.no_results_returned) ,Toast.LENGTH_LONG).show()
+                }
+            }
+            else {
+                Toast.makeText(requireContext(), orderListResponse.message ,Toast.LENGTH_LONG).show()
+                Log.e(FRAGMENT_MARKET_TAG, orderListResponse.message, orderListResponse.exception)
+            }
         }
     }
 
@@ -153,7 +206,9 @@ class Fragment_Market : Fragment() {
     fun searchItems() {
         searchSpinner?.visibility = View.GONE
         shimmerSpinner?.startShimmer()
-        GlobalScope.launch(Dispatchers.IO) {
+
+        itemViewModel.getItems()
+        /*GlobalScope.launch(Dispatchers.IO) {
             val responseApi = ItemRepository(requireContext()).getItems()
             if(responseApi.success) {
                 itemList = responseApi.obj ?: mutableListOf()
@@ -167,7 +222,7 @@ class Fragment_Market : Fragment() {
                     }
                 }
             }
-        }
+        }*/
     }
     companion object {
         const val FRAGMENT_MARKET_TAG = "FRAGMENT_MARKET"
