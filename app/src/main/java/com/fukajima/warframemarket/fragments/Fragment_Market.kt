@@ -7,16 +7,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.ProgressBar
-import android.widget.SpinnerAdapter
+import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.widget.SearchView
-import androidx.compose.ui.text.toLowerCase
-import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -25,30 +25,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.fukajima.warframemarket.R
 import com.fukajima.warframemarket.components.CustomSpinner
+import com.fukajima.warframemarket.enums.OnlineStatusEnum
+import com.fukajima.warframemarket.enums.OrderTypeEnum
 import com.fukajima.warframemarket.viewModels.ItemOrderViewModel
 import com.fukajima.warframemarket.viewModels.ItemViewModel
 import com.fukajima.warframerepo.entity.Item
 import com.fukajima.warframerepo.entity.ItemOrder
-import com.fukajima.warframerepo.repository.ItemRepository
-import com.google.gson.Gson
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.squareup.picasso.Picasso
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.util.Locale
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [Fragment_Market.newInstance] factory method to
- * create an instance of this fragment.
- */
 class Fragment_Market : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -60,6 +45,9 @@ class Fragment_Market : Fragment() {
     private var shimmerSpinner: ShimmerFrameLayout? = null
     private var txvItemLabel: TextView? = null
     private var imageViewItem: ImageView? = null
+    private lateinit var btnFilter: LinearLayout
+    private lateinit var fabPlaceOrder: FloatingActionButton
+    private var list: MutableList<ItemOrder> = mutableListOf()
 
     private var selectedItem: Item? = null
 
@@ -90,6 +78,8 @@ class Fragment_Market : Fragment() {
         shimmerSpinner = view.findViewById(R.id.market_shimmer_spinner)
         txvItemLabel = view.findViewById(R.id.txv_market_item_label)
         imageViewItem = view.findViewById(R.id.market_iv_item)
+        btnFilter = view.findViewById(R.id.linear_layout_fragment_market_filter)
+        fabPlaceOrder = view.findViewById(R.id.float_act_btn_fragment_market)
 
         searchSpinner = view.findViewById<CustomSpinner>(R.id.market_searchSpinner)
         searchSpinner?.setAdapter("id", arrayOf("item_name"), mutableListOf<Item>())
@@ -118,6 +108,7 @@ class Fragment_Market : Fragment() {
 
                                     txvItemLabel?.text = selectedItem.item_name.toString()
                                     txvItemLabel?.visibility = View.VISIBLE
+                                    btnFilter.visibility = View.VISIBLE
                                     Picasso
                                         .get()
                                         .load(selectedItem.getItemAssetUrl())
@@ -166,6 +157,7 @@ class Fragment_Market : Fragment() {
         itemOrderViewModel.itemOrderLiveData.observe(viewLifecycleOwner) { orderListResponse ->
             if(orderListResponse.success) {
                 if(!orderListResponse.obj.isNullOrEmpty()) {
+                    list = orderListResponse.obj!!.toMutableList()
                     selectedItem?.let {
                         recyclerView?.adapter = MarketAdapter(requireContext(), orderListResponse.obj!!, it)
                         showRecyclerLoading(false)
@@ -177,6 +169,7 @@ class Fragment_Market : Fragment() {
                             .load(it.getItemAssetUrl())
                             .into(imageViewItem)
                         imageViewItem?.visibility = View.VISIBLE
+                        btnFilter.visibility = View.VISIBLE
                     }
                 }
                 else {
@@ -188,6 +181,116 @@ class Fragment_Market : Fragment() {
                 Log.e(FRAGMENT_MARKET_TAG, orderListResponse.message, orderListResponse.exception)
             }
         }
+
+        btnFilter.setOnClickListener{
+            openAlertDialogFilter()
+        }
+
+        fabPlaceOrder.setOnClickListener {
+            openAlertDialogPlaceOrder()
+        }
+
+    }
+
+    fun doFilter(orderType: OrderTypeEnum, onlineStatus: OnlineStatusEnum, maxPl:Int?, minPl:Int?){
+        var listaFiltrada = list.filter { it.platinum!! >= (minPl?:0 ) && it.platinum!! <= (maxPl?: 9999) }
+        when(orderType){
+            OrderTypeEnum.buyers -> listaFiltrada = listaFiltrada.filter { it.order_type == "buy" }
+            OrderTypeEnum.sellers -> listaFiltrada = listaFiltrada.filter { it.order_type == "sell" }
+            }
+        when(onlineStatus){
+            OnlineStatusEnum.onSite -> listaFiltrada = listaFiltrada.filter { it.user?.status == "online" || it.user?.status == "ingame"}
+            OnlineStatusEnum.inGame -> listaFiltrada = listaFiltrada.filter { it.user?.status == "ingame" }
+            else -> {}
+        }
+        recyclerView?.adapter =
+            selectedItem?.let { MarketAdapter(requireContext(), listaFiltrada, it) }
+    }
+
+    fun openAlertDialogPlaceOrder(){
+        val dialogView = layoutInflater.inflate(R.layout.dialog_place_order, null)
+
+        val postButton = dialogView.findViewById<Button>(R.id.btn_dialog_place_order_post)
+        val closeButton = dialogView.findViewById<Button>(R.id.btn_dialog_place_order_close)
+
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .setCancelable(true) // permite fechar clicando fora
+            .create()
+
+        postButton.setOnClickListener {
+
+            dialog.dismiss()
+
+        }
+
+        closeButton.setOnClickListener {
+            dialog.dismiss()
+
+        }
+
+        dialog.show()
+    }
+
+    fun openAlertDialogFilter(){
+        val dialogView = layoutInflater.inflate(R.layout.dialog_market_filter, null)
+
+        val confirmButton = dialogView.findViewById<Button>(R.id.btn_dialog_market_confirm)
+        val closeButton = dialogView.findViewById<Button>(R.id.btn_dialog_market_close)
+
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .setCancelable(true) // permite fechar clicando fora
+            .create()
+
+        var enumOnlineStatusEnum = OnlineStatusEnum.all
+        var enumOrderType = OrderTypeEnum.sellers
+        var radGroupOrderType = dialogView.findViewById<RadioGroup>(R.id.rad_group_dialog_market_order_type)
+        var radGroupOnlineStatus = dialogView.findViewById<RadioGroup>(R.id.rad_group_dialog_market_online_status)
+        var editTextMaxPl = dialogView.findViewById<EditText>(R.id.edit_text_dialog_market_max_price)
+        var editTextMinPl = dialogView.findViewById<EditText>(R.id.edit_text_dialog_market_min_price)
+
+        radGroupOrderType.setOnCheckedChangeListener { group, checkedId ->
+            when(checkedId){
+                R.id.rad_btn_dialog_market_buyers -> enumOrderType = OrderTypeEnum.buyers
+                R.id.rad_btn_dialog_market_sellers -> enumOrderType = OrderTypeEnum.sellers
+            }
+        }
+
+        radGroupOnlineStatus.setOnCheckedChangeListener { group, checkedId ->
+            when(checkedId){
+                R.id.rad_btn_dialog_market_status_all -> enumOnlineStatusEnum = OnlineStatusEnum.all
+                R.id.rad_btn_dialog_market_status_in_game -> enumOnlineStatusEnum = OnlineStatusEnum.inGame
+                R.id.rad_btn_dialog_market_status_on_site -> enumOnlineStatusEnum = OnlineStatusEnum.onSite
+            }
+        }
+
+
+        confirmButton.setOnClickListener {
+            var maxPl: String? = null
+            var minPl: String? = null
+
+            if (!editTextMaxPl.text.isNullOrEmpty()){
+                maxPl = editTextMaxPl.text.toString()
+            }
+
+            if (!editTextMinPl.text.isNullOrEmpty()){
+                minPl = editTextMinPl.text.toString()
+            }
+
+
+            doFilter(enumOrderType, enumOnlineStatusEnum, maxPl?.toInt(), minPl?.toInt())
+            dialog.dismiss()
+
+        }
+
+        closeButton.setOnClickListener {
+            dialog.dismiss()
+
+        }
+
+        dialog.show()
+
     }
 
     fun showRecyclerLoading(visible: Boolean) {
@@ -270,9 +373,9 @@ class Fragment_Market : Fragment() {
         fun changeOrderTypeColor_Name(orderType:String?, txtOrderType:TextView?){
             when (orderType) {
                 "sell" ->{ txtOrderType?.text="wts"
-                            txtOrderType?.setTextColor(ContextCompat.getColor(context, R.color.green_high_reputation))}
+                            txtOrderType?.setTextColor(ContextCompat.getColor(context, R.color.pink))}
                 "buy" -> {txtOrderType?.text="wtb"
-                    txtOrderType?.setTextColor(ContextCompat.getColor(context, R.color.pink))}
+                    txtOrderType?.setTextColor(ContextCompat.getColor(context, R.color.green_high_reputation))}
                 else -> return
             }
         }
