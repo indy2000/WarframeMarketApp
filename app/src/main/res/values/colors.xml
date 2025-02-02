@@ -5,6 +5,7 @@
     <color name="background_color">#ff171e21</color>
     <color name="dark_background">#ff121212</color>
     <color name="asset_teal">#FF3c879c</color>
+    <color name="asset_teal_opacity">#3B3c879c</color>
     <color name="colorPrimary">#1F9DFF</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
@@ -20,7 +21,9 @@
     <color name="green_user_online">#035c04</color>
     <color name="grey_reputation">#657f86</color>
     <color name="green_high_reputation">#01a268</color>
+    <color name="green_high_reputation_opacity">#3B01A268</color>
     <color name="orange">#b53600</color>
+    <color name="lighter_orange">#FF5722</color>
     <color name="site_background">#101619</color>
 
 </resources>
