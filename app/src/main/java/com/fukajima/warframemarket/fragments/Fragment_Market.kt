@@ -27,17 +27,16 @@ import com.fukajima.warframemarket.R
 import com.fukajima.warframemarket.components.CustomSpinner
 import com.fukajima.warframemarket.enums.OnlineStatusEnum
 import com.fukajima.warframemarket.enums.OrderTypeEnum
+import com.fukajima.warframemarket.enums.SortOrderEnum
 import com.fukajima.warframemarket.viewModels.ItemOrderViewModel
 import com.fukajima.warframemarket.viewModels.ItemViewModel
 import com.fukajima.warframerepo.entity.Item
 import com.fukajima.warframerepo.entity.ItemOrder
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.squareup.picasso.Picasso
 
 class Fragment_Market : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
     private var searchSpinner: CustomSpinner? = null
     private var itemList: List<Item> = mutableListOf()
     private var recyclerView: RecyclerView? = null
@@ -45,11 +44,22 @@ class Fragment_Market : Fragment() {
     private var shimmerSpinner: ShimmerFrameLayout? = null
     private var txvItemLabel: TextView? = null
     private var imageViewItem: ImageView? = null
+    private var btnSortStatus: MaterialButton? = null
+    private var btnSortReputation: MaterialButton? = null
+    private var btnSortPrice: MaterialButton? = null
+    private var btnSortQuantity: MaterialButton? = null
+    private lateinit var sortingButtonsLayout: View
     private lateinit var btnFilter: LinearLayout
     private lateinit var fabPlaceOrder: FloatingActionButton
     private var list: MutableList<ItemOrder> = mutableListOf()
+    private var listaFiltrada: MutableList<ItemOrder> = mutableListOf()
 
     private var selectedItem: Item? = null
+
+    private var quantitySortingValue = SortOrderEnum.DEFAULT
+    private var priceSortingValue = SortOrderEnum.ASCENDING
+    private var userStatusSortingValue = SortOrderEnum.DESCENDING
+    private var userReputationSortingValue = SortOrderEnum.DEFAULT
 
     private val itemViewModel: ItemViewModel by lazy {
         ViewModelProvider(this@Fragment_Market).get(ItemViewModel::class.java)
@@ -80,6 +90,23 @@ class Fragment_Market : Fragment() {
         imageViewItem = view.findViewById(R.id.market_iv_item)
         btnFilter = view.findViewById(R.id.linear_layout_fragment_market_filter)
         fabPlaceOrder = view.findViewById(R.id.float_act_btn_fragment_market)
+
+        sortingButtonsLayout = view.findViewById(R.id.sorting_view_frag_market)
+        btnSortStatus = view.findViewById(R.id.btn_market_sort_user_status)
+        setSortButtonState(btnSortStatus, userStatusSortingValue)
+        btnSortStatus?.setOnClickListener(sortingButtonListener())
+
+        btnSortReputation = view.findViewById(R.id.btn_market_sort_reputation)
+        setSortButtonState(btnSortReputation, userReputationSortingValue)
+        btnSortReputation?.setOnClickListener(sortingButtonListener())
+
+        btnSortPrice = view.findViewById(R.id.btn_market_sort_price)
+        setSortButtonState(btnSortPrice, priceSortingValue)
+        btnSortPrice?.setOnClickListener(sortingButtonListener())
+
+        btnSortQuantity = view.findViewById(R.id.btn_market_sort_quantity)
+        setSortButtonState(btnSortQuantity, quantitySortingValue)
+        btnSortQuantity?.setOnClickListener(sortingButtonListener())
 
         searchSpinner = view.findViewById<CustomSpinner>(R.id.market_searchSpinner)
         searchSpinner?.setAdapter("id", arrayOf("item_name"), mutableListOf<Item>())
@@ -159,7 +186,11 @@ class Fragment_Market : Fragment() {
                 if(!orderListResponse.obj.isNullOrEmpty()) {
                     list = orderListResponse.obj!!.toMutableList()
                     selectedItem?.let {
-                        recyclerView?.adapter = MarketAdapter(requireContext(), orderListResponse.obj!!, it)
+                        //TODO: arrumar essa chamada do doFilter() para receber filtros persistidos do diálogo ao fazer nova requisição
+                        listaFiltrada = doFilter(OrderTypeEnum.sellers, OnlineStatusEnum.all, null, null)
+                        val listaOrdenada = doSort(userStatusSortingValue, userReputationSortingValue, priceSortingValue, quantitySortingValue)
+
+                        recyclerView?.adapter = MarketAdapter(requireContext(), listaOrdenada, it)
                         showRecyclerLoading(false)
 
                         txvItemLabel?.text = it.item_name.toString()
@@ -170,6 +201,7 @@ class Fragment_Market : Fragment() {
                             .into(imageViewItem)
                         imageViewItem?.visibility = View.VISIBLE
                         btnFilter.visibility = View.VISIBLE
+                        sortingButtonsLayout.visibility = View.VISIBLE
                     }
                 }
                 else {
@@ -192,19 +224,99 @@ class Fragment_Market : Fragment() {
 
     }
 
-    fun doFilter(orderType: OrderTypeEnum, onlineStatus: OnlineStatusEnum, maxPl:Int?, minPl:Int?){
-        var listaFiltrada = list.filter { it.platinum!! >= (minPl?:0 ) && it.platinum!! <= (maxPl?: 9999) }
+    fun doFilter(orderType: OrderTypeEnum, onlineStatus: OnlineStatusEnum, maxPl:Int?, minPl:Int?) : MutableList<ItemOrder>{
+        var listaFiltrada = list.filter { it.platinum!! >= (minPl?:0 ) && it.platinum!! <= (maxPl?: 9999) }.toMutableList()
         when(orderType){
-            OrderTypeEnum.buyers -> listaFiltrada = listaFiltrada.filter { it.order_type == "buy" }
-            OrderTypeEnum.sellers -> listaFiltrada = listaFiltrada.filter { it.order_type == "sell" }
+            OrderTypeEnum.buyers -> listaFiltrada = listaFiltrada.filter { it.order_type == "buy" }.toMutableList()
+            OrderTypeEnum.sellers -> listaFiltrada = listaFiltrada.filter { it.order_type == "sell" }.toMutableList()
             }
         when(onlineStatus){
-            OnlineStatusEnum.onSite -> listaFiltrada = listaFiltrada.filter { it.user?.status == "online" || it.user?.status == "ingame"}
-            OnlineStatusEnum.inGame -> listaFiltrada = listaFiltrada.filter { it.user?.status == "ingame" }
+            OnlineStatusEnum.onSite -> listaFiltrada = listaFiltrada.filter { it.user?.status == "online" || it.user?.status == "ingame"}.toMutableList()
+            OnlineStatusEnum.inGame -> listaFiltrada = listaFiltrada.filter { it.user?.status == "ingame" }.toMutableList()
             else -> {}
         }
+        //recyclerView?.adapter =
+        //    selectedItem?.let { MarketAdapter(requireContext(), listaFiltrada, it) }
+        return listaFiltrada
+    }
+
+    fun doSort(statusSorting: SortOrderEnum, reputationSorting: SortOrderEnum, priceSorting: SortOrderEnum, quantitySorting: SortOrderEnum) : MutableList<ItemOrder>{
+        var listaOrdenada = if (listaFiltrada.isNullOrEmpty()) list else listaFiltrada
+
+        listaOrdenada = listaOrdenada.sortedWith( compareBy<ItemOrder>{it.order_type}
+            .let { comparator ->
+                when(statusSorting){
+                    SortOrderEnum.ASCENDING -> comparator.thenBy { it.user?.status }
+                    SortOrderEnum.DESCENDING -> comparator.thenByDescending { it.user?.status }
+                    else -> comparator
+                }
+            }
+            .let { comparator ->
+                when(reputationSorting) {
+                    SortOrderEnum.ASCENDING -> comparator.thenBy { it.user?.reputation }
+                    SortOrderEnum.DESCENDING -> comparator.thenByDescending { it.user?.reputation }
+                    else -> comparator
+                }
+            }
+            .let { comparator ->
+                when(priceSorting) {
+                    SortOrderEnum.ASCENDING -> comparator.thenBy { it.platinum }
+                    SortOrderEnum.DESCENDING -> comparator.thenByDescending { it.platinum }
+                    else -> comparator
+                }
+            }
+            .let { comparator ->
+                when(quantitySorting) {
+                    SortOrderEnum.ASCENDING -> comparator.thenBy { it.quantity }
+                    SortOrderEnum.DESCENDING -> comparator.thenByDescending { it.quantity }
+                    else -> comparator
+                }
+            }
+        ).toMutableList()
+
+        return listaOrdenada
+    }
+
+    fun setSortButtonState(button: MaterialButton?, sortState: SortOrderEnum) {
+        when(sortState){
+            SortOrderEnum.DEFAULT -> {
+                button?.setIconTintResource(R.color.invisible)
+            }
+            SortOrderEnum.ASCENDING -> {
+                button?.setIconTintResource(R.color.green_high_reputation)
+                button?.setIconResource(android.R.drawable.arrow_up_float)
+            }
+            SortOrderEnum.DESCENDING -> {
+                button?.setIconTintResource(R.color.lighter_orange)
+                button?.setIconResource(android.R.drawable.arrow_down_float)
+            }
+        }
+    }
+
+    fun sortingButtonListener() = View.OnClickListener {
+        val currentSortValue = when(it.id) {
+            R.id.btn_market_sort_user_status -> userStatusSortingValue
+            R.id.btn_market_sort_reputation -> userReputationSortingValue
+            R.id.btn_market_sort_price -> priceSortingValue
+            R.id.btn_market_sort_quantity -> quantitySortingValue
+            else -> null
+        }
+
+        val enumValues = SortOrderEnum.values().toMutableList()
+        val enumCurrentIndex = enumValues.indexOf(currentSortValue)
+        var nextIndexValue = if(enumCurrentIndex >= (enumValues.size - 1)) 0 else enumCurrentIndex + 1
+
+        when(it.id) {
+            R.id.btn_market_sort_user_status -> userStatusSortingValue = enumValues[nextIndexValue]
+            R.id.btn_market_sort_reputation -> userReputationSortingValue = enumValues[nextIndexValue]
+            R.id.btn_market_sort_price -> priceSortingValue = enumValues[nextIndexValue]
+            R.id.btn_market_sort_quantity -> quantitySortingValue = enumValues[nextIndexValue]
+        }
+
+        setSortButtonState(it as MaterialButton, enumValues[nextIndexValue])
+        var listaOrdenada = doSort(userStatusSortingValue, userReputationSortingValue, priceSortingValue, quantitySortingValue)
         recyclerView?.adapter =
-            selectedItem?.let { MarketAdapter(requireContext(), listaFiltrada, it) }
+            selectedItem?.let { MarketAdapter(requireContext(), listaOrdenada, selectedItem!!) }
     }
 
     fun openAlertDialogPlaceOrder(){
@@ -278,8 +390,10 @@ class Fragment_Market : Fragment() {
                 minPl = editTextMinPl.text.toString()
             }
 
-
-            doFilter(enumOrderType, enumOnlineStatusEnum, maxPl?.toInt(), minPl?.toInt())
+            listaFiltrada = doFilter(enumOrderType, enumOnlineStatusEnum, maxPl?.toInt(), minPl?.toInt())
+            listaFiltrada = doSort(userStatusSortingValue, userReputationSortingValue, priceSortingValue, quantitySortingValue)
+            recyclerView?.adapter =
+                selectedItem?.let { MarketAdapter(requireContext(), listaFiltrada, it) }
             dialog.dismiss()
 
         }

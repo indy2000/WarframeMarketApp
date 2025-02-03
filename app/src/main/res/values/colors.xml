@@ -25,5 +25,6 @@
     <color name="orange">#b53600</color>
     <color name="lighter_orange">#FF5722</color>
     <color name="site_background">#101619</color>
+    <color name="invisible">#00000000</color>
 
 </resources>
