@@ -413,10 +413,14 @@ class Fragment_Market : Fragment() {
             txvItemLabel?.visibility = View.INVISIBLE
             imageViewItem?.visibility = View.INVISIBLE
             progress?.visibility = View.VISIBLE
+            btnFilter.visibility = View.GONE
+            sortingButtonsLayout.visibility = View.GONE
         }
         else {
             recyclerView?.visibility = View.VISIBLE
             progress?.visibility = View.GONE
+            btnFilter.visibility = View.VISIBLE
+            sortingButtonsLayout.visibility = View.VISIBLE
         }
     }
 
