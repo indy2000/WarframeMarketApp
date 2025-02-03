@@ -124,37 +124,6 @@ class Fragment_Market : Fragment() {
                 selectedItem?.let {
                     showRecyclerLoading(true)
                     itemOrderViewModel.getItemOrders(it.url_name!!)
-                    /*GlobalScope.launch(Dispatchers.IO) {
-                        var orderListResponse = ItemRepository(requireContext()).getItemOrders(it.url_name!!)
-
-                        if(orderListResponse.success) {
-                            withContext(Dispatchers.Main) {
-                                if(!orderListResponse.obj.isNullOrEmpty()) {
-                                    recyclerView?.adapter = MarketAdapter(requireContext(), orderListResponse.obj!!, it)
-                                    showRecyclerLoading(false)
-
-                                    txvItemLabel?.text = selectedItem.item_name.toString()
-                                    txvItemLabel?.visibility = View.VISIBLE
-                                    btnFilter.visibility = View.VISIBLE
-                                    Picasso
-                                        .get()
-                                        .load(selectedItem.getItemAssetUrl())
-                                        .into(imageViewItem)
-                                    imageViewItem?.visibility = View.VISIBLE
-                                    //recyclerView?.adapter?.notifyDataSetChanged()
-                                }
-                                else {
-                                    Toast.makeText(requireContext(), requireContext().getString(R.string.no_results_returned) ,Toast.LENGTH_LONG).show()
-                                }
-                            }
-                        }
-                        else {
-                            withContext(Dispatchers.Main) {
-                                Toast.makeText(requireContext(), orderListResponse.message ,Toast.LENGTH_LONG).show()
-                                Log.e(FRAGMENT_MARKET_TAG, orderListResponse.message, orderListResponse.exception)
-                            }
-                        }
-                    }*/
                 }
                 return 0
             }
@@ -429,21 +398,6 @@ class Fragment_Market : Fragment() {
         shimmerSpinner?.startShimmer()
 
         itemViewModel.getItems()
-        /*GlobalScope.launch(Dispatchers.IO) {
-            val responseApi = ItemRepository(requireContext()).getItems()
-            if(responseApi.success) {
-                itemList = responseApi.obj ?: mutableListOf()
-
-                withContext(Dispatchers.Main) {
-                    searchSpinner?.visibility = View.VISIBLE
-                    searchSpinner?.setAdapter("id", arrayOf("item_name"), itemList)
-                    shimmerSpinner?.apply {
-                        stopShimmer()
-                        visibility = View.GONE
-                    }
-                }
-            }
-        }*/
     }
     companion object {
         const val FRAGMENT_MARKET_TAG = "FRAGMENT_MARKET"
