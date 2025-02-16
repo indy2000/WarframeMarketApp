@@ -12,7 +12,7 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-        val mp = MediaPlayer.create(this, R.raw.this_is_what_you_are_asset_v2)
+        val mp = MediaPlayer.create(this, R.raw.this_is_what_you_are_asset_v4)
         mp.start()
         /*Handler(Looper.getMainLooper()).postDelayed({
 
