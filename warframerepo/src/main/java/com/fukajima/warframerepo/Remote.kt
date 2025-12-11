@@ -6,7 +6,9 @@ import com.fukajima.warframerepo.entity.Item
 import com.fukajima.warframerepo.entity.ItemData
 import com.fukajima.warframerepo.entity.ItemDataV2
 import com.fukajima.warframerepo.entity.ItemOrder
+import com.fukajima.warframerepo.entity.ItemOrderV2
 import com.fukajima.warframerepo.entity.ItemOrdersResponse
+import com.fukajima.warframerepo.entity.ItemOrdersResponseV2
 import com.fukajima.warframerepo.entity.ItemsResponse
 import com.fukajima.warframerepo.entity.ItemsResponseV2
 import com.fukajima.warframerepo.entity.LoginResponse
@@ -61,6 +63,7 @@ class Remote(var context: Context) {
         return response
     }
 
+    @Deprecated("API está retornando HTTP 404. Utilizar a v2.")
     fun getOrdersByItem(item_url_name: String) : Response<List<ItemOrder>>{
         var response: Response<List<ItemOrder>> = Response<List<ItemOrder>>()
         val type = TypeToken.get(ItemOrdersResponse::class.java).type
@@ -265,6 +268,31 @@ class Remote(var context: Context) {
             response.success = false
             response.exception = t
             response.message = context.getString(R.string.not_possible_return_items)
+        }
+
+        return response
+    }
+
+    fun getOrdersByItemV2(item_url_name: String) : Response<List<ItemOrderV2>>{
+        var response: Response<List<ItemOrderV2>> = Response<List<ItemOrderV2>>()
+        val type = TypeToken.get(ItemOrdersResponseV2::class.java).type
+        var url = "${apiBaseUrl.replace("v1","v2")}/orders/item/$item_url_name"
+
+        try {
+            val apiResponse = HttpHelper<ItemOrdersResponseV2>().HttpGet(type, url, null, 10)
+
+            if(!apiResponse.data.isNullOrEmpty()) {
+                response.success = true
+                response.obj = apiResponse.data
+            }
+            else {
+                throw Exception(context.getString(R.string.not_possible_return_orders_item))
+            }
+        }
+        catch (t: Throwable) {
+            response.success = false
+            response.exception = t
+            response.message = context.getString(R.string.not_possible_return_orders_item)
         }
 
         return response
