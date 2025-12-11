@@ -1,6 +1,7 @@
 package com.fukajima.warframerepo
 
 import android.util.Log
+import com.fukajima.warframerepo.entity.LoginResponse
 import com.google.gson.Gson
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
@@ -53,6 +54,8 @@ class HttpHelper<T> {
             headers.forEach { header ->
                 requestBuilder.addHeader(header.key, header.value)
             }
+            requestBuilder.addHeader("Content-Type", "application/json")
+            requestBuilder.addHeader("Accept", "application/json")
         }
 
         val body: RequestBody =
@@ -70,5 +73,42 @@ class HttpHelper<T> {
 
         Log.w("REQUEST-GET", String.format("GET-RETORNO: %s", retorno))
         return Gson().fromJson(retorno, type)
+    }
+
+    fun HttpPostLogin(type: Type, url: String, headers: Map<String, String>?, jsonBody: String, timeOut: Long?) : LoginResponse? {
+
+        val client = OkHttpClient.Builder()
+        client.connectTimeout(timeOut ?: 10L, TimeUnit.SECONDS)
+        client.readTimeout(timeOut ?: 10L, TimeUnit.SECONDS)
+        client.writeTimeout(timeOut ?: 10L, TimeUnit.SECONDS)
+
+        val requestBuilder = Request.Builder()
+
+        headers?.let {
+            headers.forEach { header ->
+                requestBuilder.addHeader(header.key, header.value)
+            }
+            requestBuilder.addHeader("Content-Type", "application/json")
+            requestBuilder.addHeader("Accept", "application/json")
+        }
+
+        val body: RequestBody =
+            RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonBody)
+
+        val request =
+            requestBuilder
+                .url(url)
+                .post(body)
+                .build()
+
+        val response = client.build().newCall(request).execute()
+
+        val retorno = response.body()!!.string()
+
+        Log.w("REQUEST-GET", String.format("GET-RETORNO: %s", retorno))
+        var retornoObjeto = Gson().fromJson<LoginResponse>(retorno, type)
+
+        retornoObjeto.jwt = response.header("Set-Cookie")
+        return retornoObjeto
     }
 }

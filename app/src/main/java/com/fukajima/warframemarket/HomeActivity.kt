@@ -5,7 +5,9 @@ import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.fukajima.warframemarket.fragments.Fragment_Contracts
+import com.fukajima.warframemarket.fragments.Fragment_Login
 import com.fukajima.warframemarket.fragments.Fragment_Market
+import com.fukajima.warframemarket.fragments.Fragment_Profile
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class HomeActivity : AppCompatActivity() {
@@ -25,6 +27,7 @@ class HomeActivity : AppCompatActivity() {
                     supportFragmentManager
                         .beginTransaction()
                         .replace(R.id.main_linear, Fragment_Market(), "FRAG_MARKET")
+                        .addToBackStack(null)
                         .commit()
                     return@setOnItemSelectedListener true
                 }
@@ -32,17 +35,23 @@ class HomeActivity : AppCompatActivity() {
                     supportFragmentManager
                         .beginTransaction()
                         .replace(R.id.main_linear, Fragment_Contracts(), "FRAG_CONTRACTS")
+                        .addToBackStack(null)
                         .commit()
                     return@setOnItemSelectedListener true
                 }
                 R.id.nav_menu_profile -> {
-                    Toast.makeText(this@HomeActivity, "Not Implemented", Toast.LENGTH_SHORT).show()
+                    supportFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.main_linear, Fragment_Profile(), "FRAG_PROFILE")
+                        .addToBackStack(null)
+                        .commit()
                     return@setOnItemSelectedListener true
                 }
                 else -> {
                     supportFragmentManager
                         .beginTransaction()
                         .replace(R.id.main_linear, Fragment_Market(), "FRAG_MARKET")
+                        .addToBackStack(null)
                         .commit()
                     return@setOnItemSelectedListener true
                 }
@@ -51,8 +60,12 @@ class HomeActivity : AppCompatActivity() {
         navigation.selectedItemId = R.id.nav_menu_market
 
         imageButtonLogin.setOnClickListener{
-            // TODO: Implement login button logic and view. Also need to implement a condition for button visibility when logged in
-            Toast.makeText(this@HomeActivity,"Not Implemented", Toast.LENGTH_SHORT).show()
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.main_linear, Fragment_Login(), "FRAG_LOGIN")
+                .addToBackStack(null)
+                .commit()
+            //Toast.makeText(this@HomeActivity,"Not Implemented", Toast.LENGTH_SHORT).show()
         }
 
     }

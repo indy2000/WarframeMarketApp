@@ -16,6 +16,9 @@
         android:theme="@style/Theme.WarframeMarket"
         tools:targetApi="31">
         <activity
+            android:name=".fragments.Fragment_Login"
+            android:exported="false" />
+        <activity
             android:name=".SplashActivity"
             android:exported="true"
             android:theme="@style/Theme.WarframeMarket">
@@ -29,9 +32,7 @@
             android:name=".HomeActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.WarframeMarket">
-
-        </activity>
+            android:theme="@style/Theme.WarframeMarket"></activity>
     </application>
 
 </manifest>
