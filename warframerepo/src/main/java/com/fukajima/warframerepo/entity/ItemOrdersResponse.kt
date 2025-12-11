@@ -16,7 +16,7 @@ class ItemOrder {
     var user: ItemOrderUser? = null
     var order_type: String? = null
     var last_update: String? = null
-    var visible: String? = null
+    var visible: Boolean = false
     var id: String? = null
     var region: String? = null
 }

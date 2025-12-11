@@ -130,7 +130,8 @@ class Fragment_Market : Fragment() {
                 selectedItem = searchSpinner?.selectedItem as Item?
                 selectedItem?.let {
                     showRecyclerLoading(true)
-                    itemOrderViewModel.getItemOrders(it.url_name!!)
+                    //itemOrderViewModel.getItemOrders(it.url_name!!)
+                    itemOrderViewModel.getItemOrdersV2(it.url_name!!)
                 }
                 return 0
             }
@@ -181,6 +182,39 @@ class Fragment_Market : Fragment() {
         }
 
         itemOrderViewModel.itemOrderLiveData.observe(viewLifecycleOwner) { orderListResponse ->
+            if(orderListResponse.success) {
+                if(!orderListResponse.obj.isNullOrEmpty()) {
+                    list = orderListResponse.obj!!.toMutableList()
+                    selectedItem?.let {
+                        //TODO: arrumar essa chamada do doFilter() para receber filtros persistidos do diálogo ao fazer nova requisição
+                        listaFiltrada = doFilter(OrderTypeEnum.sellers, OnlineStatusEnum.all, null, null)
+                        val listaOrdenada = doSort(userStatusSortingValue, userReputationSortingValue, priceSortingValue, quantitySortingValue)
+
+                        recyclerView?.adapter = MarketAdapter(requireContext(), listaOrdenada, it)
+                        showRecyclerLoading(false)
+
+                        txvItemLabel?.text = it.item_name.toString()
+                        txvItemLabel?.visibility = View.VISIBLE
+                        Picasso
+                            .get()
+                            .load(it.getItemAssetUrl())
+                            .into(imageViewItem)
+                        imageViewItem?.visibility = View.VISIBLE
+                        btnFilter.visibility = View.VISIBLE
+                        sortingButtonsLayout.visibility = View.VISIBLE
+                    }
+                }
+                else {
+                    Toast.makeText(requireContext(), requireContext().getString(R.string.no_results_returned) ,Toast.LENGTH_LONG).show()
+                }
+            }
+            else {
+                Toast.makeText(requireContext(), orderListResponse.message ,Toast.LENGTH_LONG).show()
+                Log.e(FRAGMENT_MARKET_TAG, orderListResponse.message, orderListResponse.exception)
+            }
+        }
+
+        itemOrderViewModel.itemOrderV2LiveData.observe(viewLifecycleOwner) { orderListResponse ->
             if(orderListResponse.success) {
                 if(!orderListResponse.obj.isNullOrEmpty()) {
                     list = orderListResponse.obj!!.toMutableList()
