@@ -4,9 +4,11 @@ import android.content.Context
 import android.webkit.CookieManager
 import com.fukajima.warframerepo.entity.Item
 import com.fukajima.warframerepo.entity.ItemData
+import com.fukajima.warframerepo.entity.ItemDataV2
 import com.fukajima.warframerepo.entity.ItemOrder
 import com.fukajima.warframerepo.entity.ItemOrdersResponse
 import com.fukajima.warframerepo.entity.ItemsResponse
+import com.fukajima.warframerepo.entity.ItemsResponseV2
 import com.fukajima.warframerepo.entity.LoginResponse
 import com.fukajima.warframerepo.entity.PlaceOrderRequest
 import com.fukajima.warframerepo.entity.PlaceOrderRequestV2
@@ -33,6 +35,7 @@ class Remote(var context: Context) {
     val apiBaseUrl = "https://api.warframe.market/v1"
     private val jwtToken = "JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzaWQiOiJJSzJVZjlyb0JCcVpJeXhmYmxxUUFiekhMTzNxRGdFUyIsImNzcmZfdG9rZW4iOiI1Mzk5OWU5ODA0YzBjODI3N2Q0ZjEyYTBlNmJiZTE0YzljMjlmZDExIiwiZXhwIjoxNzQxMDM0NzUwLCJpYXQiOjE3MzU4NTA3NTAsImlzcyI6Imp3dCIsImF1ZCI6Imp3dCIsImF1dGhfdHlwZSI6ImNvb2tpZSIsInNlY3VyZSI6ZmFsc2UsImp3dF9pZGVudGl0eSI6IjhEQkp3OGpraDJDUU9BY0x6d3lZdEhYWENHOFN4OHFuIiwibG9naW5fdWEiOiJiJ01vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQpIEFwcGxlV2ViS2l0LzUzNy4zNiAoS0hUTUwsIGxpa2UgR2Vja28pIENocm9tZS8xMjguMC4wLjAgU2FmYXJpLzUzNy4zNiBPUFIvMTE0LjAuMC4wJyIsImxvZ2luX2lwIjoiYicyODA0OjE0ZDo1YzE4OmNjZTc6ZWQ3ZDoyYzk0OjUyNzE6ODc0OCcifQ.FwR_rHXoBG7WF6A_cfoyzS6ANmbsusdDv6gxx7r5rrU"
 
+    @Deprecated("API está retornando HTTP 404. Utilizar a v2.")
     fun getItems() : Response<List<Item>> {
         var response: Response<List<Item>> = Response<List<Item>>()
         val type = TypeToken.get(ItemsResponse::class.java).type
@@ -237,6 +240,31 @@ class Remote(var context: Context) {
             response.success = false
             response.exception = t
             response.message = context.getString(R.string.not_possible_return_orders_item)
+        }
+
+        return response
+    }
+
+    fun getItemsV2() : Response<List<ItemDataV2>> {
+        var response: Response<List<ItemDataV2>> = Response<List<ItemDataV2>>()
+        val type = TypeToken.get(ItemsResponseV2::class.java).type
+        var url = "${apiBaseUrl.replace("v1","v2")}/items"
+
+        try {
+            val apiResponse = HttpHelper<ItemsResponseV2>().HttpGet(type, url, null, 10)
+
+            if(!apiResponse.data.isNullOrEmpty()) {
+                response.success = true
+                response.obj = apiResponse.data
+            }
+            else {
+                throw Exception(context.getString(R.string.not_possible_return_items))
+            }
+        }
+        catch (t: Throwable) {
+            response.success = false
+            response.exception = t
+            response.message = context.getString(R.string.not_possible_return_items)
         }
 
         return response
