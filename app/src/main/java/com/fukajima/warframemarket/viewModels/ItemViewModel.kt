@@ -15,8 +15,9 @@ class ItemViewModel(application: Application) : AndroidViewModel(application) {
 
     var itemLiveData = MutableLiveData<Response<List<Item>>>()
 
-    fun getItems() = GlobalScope.launch(Dispatchers.IO) {
+    fun getItems(requestCode: Int) = GlobalScope.launch(Dispatchers.IO) {
         val retorno = ItemRepository(getApplication()).getItems()
+        retorno.requestCode = requestCode
         itemLiveData.postValue(retorno)
     }
 }

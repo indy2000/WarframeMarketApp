@@ -2,4 +2,6 @@
 <resources>
     <string name="not_possible_return_items">Not possíble to return the items</string>
     <string name="not_possible_return_orders_item">Not possible to return orders for this item</string>
+    <string name="not_possible_place_order">Not possible to place order</string>
+    <string name="not_possible_to_login">Not possible to Login</string>
 </resources>

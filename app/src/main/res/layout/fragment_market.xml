@@ -158,7 +158,8 @@
         android:backgroundTint="@color/orange"
         app:tint="@color/white"
         android:id="@+id/float_act_btn_fragment_market"
-        android:contentDescription="@string/place_order">
+        android:contentDescription="@string/place_order"
+        android:tooltipText="@string/place_order">
 
     </com.google.android.material.floatingactionbutton.FloatingActionButton>
 

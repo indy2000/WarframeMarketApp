@@ -9,10 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.ProgressBar
+import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
@@ -23,6 +25,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.fukajima.warframemarket.CacheJWT
 import com.fukajima.warframemarket.R
 import com.fukajima.warframemarket.components.CustomSpinner
 import com.fukajima.warframemarket.enums.OnlineStatusEnum
@@ -32,6 +35,7 @@ import com.fukajima.warframemarket.viewModels.ItemOrderViewModel
 import com.fukajima.warframemarket.viewModels.ItemViewModel
 import com.fukajima.warframerepo.entity.Item
 import com.fukajima.warframerepo.entity.ItemOrder
+import com.fukajima.warframerepo.entity.PlaceOrderRequest
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.squareup.picasso.Picasso
@@ -55,10 +59,13 @@ class Fragment_Market : Fragment() {
     private var listaFiltrada: MutableList<ItemOrder> = mutableListOf()
 
     private var selectedItem: Item? = null
+    var spinnerPlaceOrder: CustomSpinner? = null
+
+    var dialogPlaceOrder: AlertDialog? = null
 
     private var quantitySortingValue = SortOrderEnum.DEFAULT
     private var priceSortingValue = SortOrderEnum.ASCENDING
-    private var userStatusSortingValue = SortOrderEnum.DESCENDING
+    private var userStatusSortingValue = SortOrderEnum.ASCENDING
     private var userReputationSortingValue = SortOrderEnum.DEFAULT
 
     private val itemViewModel: ItemViewModel by lazy {
@@ -141,12 +148,17 @@ class Fragment_Market : Fragment() {
             if(responseApi.success) {
                 itemList = responseApi.obj ?: mutableListOf()
 
-                searchSpinner?.visibility = View.VISIBLE
-                searchSpinner?.setAdapter("id", arrayOf("item_name"), itemList)
-                shimmerSpinner?.apply {
-                    stopShimmer()
-                    visibility = View.GONE
+                if (responseApi.requestCode == 0){
+                    searchSpinner?.visibility = View.VISIBLE
+                    searchSpinner?.setAdapter("id", arrayOf("item_name"), itemList)
+                    shimmerSpinner?.apply {
+                        stopShimmer()
+                        visibility = View.GONE
+                    }
+                } else if (responseApi.requestCode == 1){
+                    spinnerPlaceOrder?.setAdapter("id", arrayOf("item_name"), itemList)
                 }
+
             }
         }
 
@@ -180,6 +192,17 @@ class Fragment_Market : Fragment() {
             else {
                 Toast.makeText(requireContext(), orderListResponse.message ,Toast.LENGTH_LONG).show()
                 Log.e(FRAGMENT_MARKET_TAG, orderListResponse.message, orderListResponse.exception)
+            }
+        }
+
+        itemOrderViewModel.placeOrderLiveData.observe(viewLifecycleOwner){
+            if (it.success){
+                dialogPlaceOrder?.dismiss()
+                Toast.makeText(context, "Order Posted!", Toast.LENGTH_SHORT).show()
+            }
+            else{
+                Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                Log.e("DialogExcept", it.message, it.exception)
             }
         }
 
@@ -289,28 +312,77 @@ class Fragment_Market : Fragment() {
     }
 
     fun openAlertDialogPlaceOrder(){
-        val dialogView = layoutInflater.inflate(R.layout.dialog_place_order, null)
+        val dialogView = layoutInflater.inflate(R.layout.dialog_place_order_test, null)
 
         val postButton = dialogView.findViewById<Button>(R.id.btn_dialog_place_order_post)
         val closeButton = dialogView.findViewById<Button>(R.id.btn_dialog_place_order_close)
+        val closeXButton = dialogView.findViewById<ImageButton>(R.id.image_button_dialog_placer_order_close)
+        spinnerPlaceOrder = dialogView.findViewById<CustomSpinner>(R.id.customSpinner_dialog_place_order)
+        val itemName = dialogView.findViewById<TextView>(R.id.txt_view_dialog_place_order_item_desc)
+        val itemImage = dialogView.findViewById<ImageView>(R.id.image_view_dialog_place_order)
+        val radBtnVisible = dialogView.findViewById<RadioButton>(R.id.rad_btn_dialog_place_order_visible)
+        val radBtnHidden = dialogView.findViewById<RadioButton>(R.id.rad_btn_dialog_place_order_hidden)
+        val radBtnSell = dialogView.findViewById<RadioButton>(R.id.rad_btn_dialog_place_order_sell)
+        val radBtnBuy = dialogView.findViewById<RadioButton>(R.id.rad_btn_dialog_place_order_buy)
+        val editPricePerUnit = dialogView.findViewById<EditText>(R.id.edit_text_dialog_place_order_price)
+        val editItemQuantity = dialogView.findViewById<EditText>(R.id.edit_text_dialog_place_order_quantity)
+        val cache = CacheJWT()
 
-        val dialog = AlertDialog.Builder(requireContext())
+        dialogPlaceOrder = AlertDialog.Builder(requireContext())
             .setView(dialogView)
             .setCancelable(true) // permite fechar clicando fora
             .create()
 
         postButton.setOnClickListener {
+            var JWT = cache.getJWT(requireContext())
+            var order = PlaceOrderRequest()
+            order.quantity = editItemQuantity.text.toString().toInt()
+            order.order_type = if(radBtnBuy.isChecked == true) "buy" else "sell"
+            order.visible = radBtnVisible.isChecked
+            order.platinum = editPricePerUnit.text.toString().toInt()
+            order.item_id = selectedItem?.id
 
-            dialog.dismiss()
+            JWT = JWT.split(";").first(){it.contains("JWT=")}
+            itemOrderViewModel.setItemOrder(order, JWT)
 
         }
 
         closeButton.setOnClickListener {
-            dialog.dismiss()
+            dialogPlaceOrder?.dismiss()
 
         }
 
-        dialog.show()
+        closeXButton.setOnClickListener {
+            dialogPlaceOrder?.dismiss()
+
+        }
+
+        radBtnSell.isChecked = true
+        radBtnVisible.isChecked = true
+
+        spinnerPlaceOrder?.setAdapter("id", arrayOf("item_name"), mutableListOf<Item>())
+        spinnerPlaceOrder?.setOnSearch(object : CustomSpinner.OnItemSearch {
+            override fun onSearch(busca: String?, lista: MutableList<*>?, setar: ListView?): MutableList<*>? {
+                var filtered_list = (lista as MutableList<Item>?)?.filter { it.item_name!!.lowercase().contains(busca.toString().lowercase()) }
+                return filtered_list?.toMutableList() ?: lista
+            }
+        })
+        itemViewModel.getItems(1)
+        spinnerPlaceOrder?.setOnItemSelected(object: CustomSpinner.OnItemSelected {
+            override fun onItemSelected(position: Int): Int {
+                selectedItem = spinnerPlaceOrder?.selectedItem as Item?
+                selectedItem?.let {
+                    itemName.text = it.item_name
+                    Picasso
+                        .get()
+                        .load(it.getItemAssetUrl())
+                        .into(itemImage)
+                }
+                return 0
+            }
+        })
+
+        dialogPlaceOrder?.show()
     }
 
     fun openAlertDialogFilter(){
@@ -330,6 +402,11 @@ class Fragment_Market : Fragment() {
         var radGroupOnlineStatus = dialogView.findViewById<RadioGroup>(R.id.rad_group_dialog_market_online_status)
         var editTextMaxPl = dialogView.findViewById<EditText>(R.id.edit_text_dialog_market_max_price)
         var editTextMinPl = dialogView.findViewById<EditText>(R.id.edit_text_dialog_market_min_price)
+        var radInGameStatus = dialogView.findViewById<RadioButton>(R.id.rad_btn_dialog_market_status_in_game)
+        var radSellers = dialogView.findViewById<RadioButton>(R.id.rad_btn_dialog_market_sellers)
+
+        radInGameStatus.isChecked = true
+        radSellers.isChecked = true
 
         radGroupOrderType.setOnCheckedChangeListener { group, checkedId ->
             when(checkedId){
@@ -397,7 +474,7 @@ class Fragment_Market : Fragment() {
         searchSpinner?.visibility = View.GONE
         shimmerSpinner?.startShimmer()
 
-        itemViewModel.getItems()
+        itemViewModel.getItems(0)
     }
     companion object {
         const val FRAGMENT_MARKET_TAG = "FRAGMENT_MARKET"
