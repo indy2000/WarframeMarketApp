@@ -162,6 +162,24 @@ class Fragment_Market : Fragment() {
             }
         }
 
+        itemViewModel.itemV2LiveData.observe(viewLifecycleOwner) {responseApi ->
+            if(responseApi.success) {
+                itemList = responseApi.obj ?: mutableListOf()
+
+                if (responseApi.requestCode == 0){
+                    searchSpinner?.visibility = View.VISIBLE
+                    searchSpinner?.setAdapter("id", arrayOf("item_name"), itemList)
+                    shimmerSpinner?.apply {
+                        stopShimmer()
+                        visibility = View.GONE
+                    }
+                } else if (responseApi.requestCode == 1){
+                    spinnerPlaceOrder?.setAdapter("id", arrayOf("item_name"), itemList)
+                }
+
+            }
+        }
+
         itemOrderViewModel.itemOrderLiveData.observe(viewLifecycleOwner) { orderListResponse ->
             if(orderListResponse.success) {
                 if(!orderListResponse.obj.isNullOrEmpty()) {
@@ -367,7 +385,8 @@ class Fragment_Market : Fragment() {
                 return filtered_list?.toMutableList() ?: lista
             }
         })
-        itemViewModel.getItems(1)
+        //itemViewModel.getItems(1)
+        itemViewModel.getItemsV2(1)
         spinnerPlaceOrder?.setOnItemSelected(object: CustomSpinner.OnItemSelected {
             override fun onItemSelected(position: Int): Int {
                 selectedItem = spinnerPlaceOrder?.selectedItem as Item?
@@ -474,7 +493,8 @@ class Fragment_Market : Fragment() {
         searchSpinner?.visibility = View.GONE
         shimmerSpinner?.startShimmer()
 
-        itemViewModel.getItems(0)
+        //itemViewModel.getItems(0)
+        itemViewModel.getItemsV2(0)
     }
     companion object {
         const val FRAGMENT_MARKET_TAG = "FRAGMENT_MARKET"

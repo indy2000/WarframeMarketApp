@@ -1,26 +1,26 @@
 package com.fukajima.warframerepo.entity
 
 
-data class ItemsResponseV2(
-    val apiVersion: String,
-    val data: List<ItemData>
-)
+class ItemsResponseV2 {
+    var apiVersion: String? = null
+    var data: List<ItemDataV2>? = null
+}
 
-data class ItemDataV2(
-    val id: String,
-    val slug: String,
-    val gameRef: String,
-    val tags: List<String>,
-    val i18n: I18n
-)
+class ItemDataV2 {
+    var id: String? = null
+    var slug: String? = null
+    var gameRef: String? = null
+    var tags: List<String>? = null
+    var i18n: ItemI18nV2? = null
+}
 
-data class I18n(
-    val pt: LanguageData,
-    val en: LanguageData
-)
+class ItemI18nV2 {
+    var pt: ItemLanguageDataV2? = null
+    var en: ItemLanguageDataV2? = null
+}
 
-data class LanguageData(
-    val name: String,
-    val icon: String,
-    val thumb: String
-)
+class ItemLanguageDataV2 {
+    var name: String? = null
+    var icon: String? = null
+    var thumb: String? = null
+}
