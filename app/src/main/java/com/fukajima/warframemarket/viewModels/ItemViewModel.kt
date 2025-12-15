@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.fukajima.warframerepo.entity.Item
 import com.fukajima.warframerepo.entity.ItemDataV2
 import com.fukajima.warframerepo.entity.Response
+import com.fukajima.warframerepo.repository.ItemDataBase
 import com.fukajima.warframerepo.repository.ItemRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -15,6 +16,7 @@ import kotlinx.coroutines.launch
 class ItemViewModel(application: Application) : AndroidViewModel(application) {
 
     var itemLiveData = MutableLiveData<Response<List<Item>>>()
+
 
     @Deprecated("API está retornando HTTP 404. Utilizar a v2.")
     fun getItems(requestCode: Int) = GlobalScope.launch(Dispatchers.IO) {
@@ -34,6 +36,11 @@ class ItemViewModel(application: Application) : AndroidViewModel(application) {
         retorno.exception = retornoApi.exception
 
         retorno.obj = retornoApi.obj?.map { convertItemV2ToItemV1(it) }
+        if (retorno.obj != null){
+            ItemRepository(getApplication()).dropItemTable()
+            ItemRepository(getApplication()).insertItemOnDataBase(retorno.obj!!)
+        }
+
 
         itemV2LiveData.postValue(retorno)
     }
@@ -49,4 +56,5 @@ class ItemViewModel(application: Application) : AndroidViewModel(application) {
 
         return item
     }
+
 }
