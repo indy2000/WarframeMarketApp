@@ -24,8 +24,8 @@ class ItemRepository(val context: Context) {
         itemDao.insertAllItems(item)
     }
 
-    fun dropItemTable(){
-        itemDao.dropTable()
+    fun deleteAll(){
+        itemDao.deleteAll()
     }
 
     fun getItemById(id: String): Item{

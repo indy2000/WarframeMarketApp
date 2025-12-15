@@ -8,8 +8,8 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.fukajima.warframerepo.entity.Item
 
-@Database(entities = [Item::class], version = 3)
-abstract class ItemDataBase():RoomDatabase() {
+@Database(entities = [Item::class], version = 3, exportSchema = false)
+abstract class ItemDataBase : RoomDatabase() {
 
     abstract fun itemDao(): ItemDAO
 
@@ -21,13 +21,13 @@ abstract class ItemDataBase():RoomDatabase() {
         fun getDataBase(context: Context): ItemDataBase {
 
             if (!::instance.isInitialized) {
-                synchronized(ItemDataBase::class) {
+                //synchronized(ItemDataBase::class) {
                     instance = Room.databaseBuilder(context, ItemDataBase::class.java, "warframedb")
                         .fallbackToDestructiveMigration()
-                        .allowMainThreadQueries()
-                        .addMigrations(MIGRATION_1_2)
+                        //.allowMainThreadQueries()
+                        //.addMigrations(MIGRATION_1_2)
                         .build()
-                }
+                //}
 
             }
 
