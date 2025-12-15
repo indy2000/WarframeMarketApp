@@ -15,14 +15,15 @@ class ItemsPayload {
 
 @Entity(tableName = "Item")
 class Item {
+    @PrimaryKey
+    var id: String = ""
     @ColumnInfo
     var thumb: String? = null
     @ColumnInfo
     var item_name: String? = null
     @ColumnInfo
     var url_name: String? = null
-    @PrimaryKey
-    var id: String? = null
+
 
     fun getItemAssetUrl() : String? {
         return if(!this.thumb.isNullOrEmpty()) "https://warframe.market/static/assets/${this.thumb}" else null

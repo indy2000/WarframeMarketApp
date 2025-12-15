@@ -43,10 +43,12 @@ class ItemOrderViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun convertItemOrderNameToSignUser(item: ItemData): ItemData{
-        if (item.id != null){
-            var itemFromDb = ItemRepository(getApplication()).getItemById(item.id!!)
-            item.id = itemFromDb.item_name!!
+        if (item.id.isNullOrEmpty().not()){
+            var itemFromDb = ItemRepository(getApplication()).getItemById(item.itemId)
 
+            itemFromDb.item_name?.let{ item_name ->
+                item.item_name = item_name
+            }
         }
 
         return item

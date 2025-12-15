@@ -15,5 +15,6 @@ data class ItemData(
     var visible: Boolean,
     var createdAt: String,
     var updatedAt: String,
-    var itemId: String
+    var itemId: String,
+    var item_name: String?,
 )

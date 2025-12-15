@@ -7,7 +7,7 @@ class ItemsResponseV2 {
 }
 
 class ItemDataV2 {
-    var id: String? = null
+    var id: String = ""
     var slug: String? = null
     var gameRef: String? = null
     var tags: List<String>? = null
