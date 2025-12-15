@@ -142,8 +142,8 @@ class Fragment_Profile : Fragment() {
             holder.txtOrderType.text = itemOrder.type.toString()
             holder.txtItemPrice.text = itemOrder.platinum.toString()
             holder.txtItemQuantity.text = itemOrder.quantity.toString()
-            holder.txtItemName.text = itemOrder.id.toString()
-            holder.txtVisibility.text = itemOrder.visible.toString()
+            holder.txtItemName.text = itemOrder.item_name
+            holder.txtVisibility.text = if(itemOrder.visible) context.getString(R.string.visible) else context.getString(R.string.hidden)
 
 
             //changeReputationColor(itemOrder.user?.reputation, holder.txvUserReputation, holder.imageUserReputation)

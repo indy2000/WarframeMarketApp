@@ -37,7 +37,7 @@ class ItemViewModel(application: Application) : AndroidViewModel(application) {
 
         retorno.obj = retornoApi.obj?.map { convertItemV2ToItemV1(it) }
         if (retorno.obj != null){
-            ItemRepository(getApplication()).dropItemTable()
+            //ItemRepository(getApplication()).deleteAll()
             ItemRepository(getApplication()).insertItemOnDataBase(retorno.obj!!)
         }
 

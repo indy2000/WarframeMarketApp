@@ -53,4 +53,5 @@
     <string name="selling_price_value">100</string>
     <string name="starting_price">Starting price:</string>
     <string name="no_bids_so_far">No bids so far</string>
+    <string name="hidden">Hidden</string>
 </resources>
