@@ -38,7 +38,7 @@
             android:id="@+id/txt_card_view_fragment_wts" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="160dp"
             android:layout_height="wrap_content"
             android:text="@string/xaku_prime_set"
             android:textColor="@color/asset_teal"
@@ -47,7 +47,10 @@
             app:layout_constraintStart_toEndOf="@id/image_view_card_view_profile"
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="10dp"
-            android:id="@+id/txt_card_view_fragment_item_title" />
+            android:id="@+id/txt_card_view_fragment_item_title"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:scrollHorizontally="true"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -93,7 +96,8 @@
             app:layout_constraintStart_toEndOf="@id/txt_card_view_fragment_platinum_quantity"
             app:layout_constraintTop_toBottomOf="@id/txt_card_view_fragment_item_quantity"
             android:layout_marginStart="5dp"
-            android:layout_marginTop="2dp"/>
+            android:layout_marginTop="2dp"
+            android:id="@+id/txt_card_view_fragment_platinum_label"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_profile_order_sold"
@@ -143,6 +147,19 @@
             android:layout_marginStart="82dp"
             android:layout_marginTop="2dp"
             android:id="@+id/txt_card_view_fragment_visibility"/>
+
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginHorizontal="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt_card_view_fragment_wts"
+            android:src="@drawable/ic_delete"
+            android:background="@color/background_color"
+            app:tint="@color/red"
+            android:tooltipText="@string/delete"
+            android:id="@+id/btn_profile_order_delete"/>
 
 
 

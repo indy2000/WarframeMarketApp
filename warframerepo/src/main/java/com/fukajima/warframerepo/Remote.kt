@@ -6,6 +6,10 @@ import com.fukajima.warframerepo.entity.Item
 import com.fukajima.warframerepo.entity.ItemData
 import com.fukajima.warframerepo.entity.ItemDataV2
 import com.fukajima.warframerepo.entity.ItemOrder
+import com.fukajima.warframerepo.entity.ItemOrderEditRequest
+import com.fukajima.warframerepo.entity.ItemOrderEditResponse
+import com.fukajima.warframerepo.entity.ItemOrderSoldRequest
+import com.fukajima.warframerepo.entity.ItemOrderSoldResponse
 import com.fukajima.warframerepo.entity.ItemOrderV2
 import com.fukajima.warframerepo.entity.ItemOrdersResponse
 import com.fukajima.warframerepo.entity.ItemOrdersResponseV2
@@ -293,6 +297,106 @@ class Remote(var context: Context) {
             response.success = false
             response.exception = t
             response.message = context.getString(R.string.not_possible_return_orders_item)
+        }
+
+        return response
+    }
+
+    fun soldItemOrder(quantity: Int, jwt:String, id: String): ResponseGeneric{
+        var orderV2 = ItemOrderSoldRequest()
+        orderV2.quantity = quantity
+        var response: ResponseGeneric = ResponseGeneric()
+        var url = "${apiBaseUrl.replace("v1","v2")}/order/${id}/close"
+        val type = TypeToken.get(ItemOrderSoldResponse::class.java).type
+
+        try{
+            //var responseLogin = login(jwt)
+            var header = mutableMapOf<String, String>()
+            //header.put("Cookie", responseLogin.obj ?: jwt)
+            header.put("Cookie", jwt)
+            header.put("Authorization", jwt.split(";").firstOrNull(){ it.contains("JWT")} ?.replace("JWT=","")?:"")
+
+            val apiResponse = HttpHelper<ItemOrderSoldResponse>().HttpPost(type, url, header,Gson().toJson(orderV2), 10)
+
+            if(apiResponse.error == null){
+                response.success = true
+            }
+            else {
+                throw Exception(context.getString(R.string.not_possible_place_order))
+            }
+        }
+        catch (t: Throwable){
+            response.success = false
+            response.exception = t
+            response.message = context.getString(R.string.not_possible_place_order)
+        }
+
+        return response
+    }
+
+    fun editItemOrder(order: ItemOrderEditRequest, jwt: String, id: String): ResponseGeneric{
+        var orderV2 = ItemOrderEditRequest()
+        orderV2.quantity = order.quantity
+        orderV2.platinum = order.platinum
+        orderV2.visible = order.visible
+        var response: ResponseGeneric = ResponseGeneric()
+        var url = "${apiBaseUrl.replace("v1","v2")}/order/${id}"
+        val type = TypeToken.get(ItemOrderEditResponse::class.java).type
+
+        try{
+            //var responseLogin = login(jwt)
+            var header = mutableMapOf<String, String>()
+            //header.put("Cookie", responseLogin.obj ?: jwt)
+            header.put("Cookie", jwt)
+            header.put("Authorization", jwt.split(";").firstOrNull(){ it.contains("JWT")} ?.replace("JWT=","")?:"")
+
+            val apiResponse = HttpHelper<ItemOrderEditResponse>().HttpPatch(type, url, header,Gson().toJson(orderV2), 10)
+
+            if(apiResponse.error == null){
+                response.success = true
+            }
+            else {
+                throw Exception(context.getString(R.string.not_possible_place_order))
+            }
+        }
+        catch (t: Throwable){
+            response.success = false
+            response.exception = t
+            response.message = context.getString(R.string.not_possible_place_order)
+        }
+
+        return response
+    }
+
+    fun deleteItemOrder(id: String, jwt: String): ResponseGeneric{
+        //var orderV2 = ItemOrderEditRequest()
+        //orderV2.quantity = order.quantity
+        //orderV2.platinum = order.platinum
+        //orderV2.visible = order.visible
+        var response: ResponseGeneric = ResponseGeneric()
+        var url = "${apiBaseUrl.replace("v1","v2")}/order/${id}"
+        val type = TypeToken.get(ItemOrderEditResponse::class.java).type
+
+        try{
+            //var responseLogin = login(jwt)
+            var header = mutableMapOf<String, String>()
+            //header.put("Cookie", responseLogin.obj ?: jwt)
+            header.put("Cookie", jwt)
+            header.put("Authorization", jwt.split(";").firstOrNull(){ it.contains("JWT")} ?.replace("JWT=","")?:"")
+
+            val apiResponse = HttpHelper<ItemOrderEditResponse>().HttpDelete(type, url, header, 10)
+
+            if(apiResponse.error == null){
+                response.success = true
+            }
+            else {
+                throw Exception(context.getString(R.string.not_possible_place_order))
+            }
+        }
+        catch (t: Throwable){
+            response.success = false
+            response.exception = t
+            response.message = context.getString(R.string.not_possible_place_order)
         }
 
         return response

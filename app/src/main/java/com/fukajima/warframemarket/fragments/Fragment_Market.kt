@@ -391,7 +391,7 @@ class Fragment_Market : Fragment() {
             var JWT = cache.getJWT(requireContext())
             var order = PlaceOrderRequest()
             order.quantity = editItemQuantity.text.toString().toInt()
-            order.order_type = if(radBtnBuy.isChecked == true) "buy" else "sell"
+            order.order_type = if(radBtnBuy.isChecked) "buy" else "sell"
             order.visible = radBtnVisible.isChecked
             order.platinum = editPricePerUnit.text.toString().toInt()
             order.item_id = selectedItem?.id

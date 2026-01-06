@@ -4,6 +4,8 @@ import android.content.Context
 import com.fukajima.warframerepo.Remote
 import com.fukajima.warframerepo.entity.ItemData
 import com.fukajima.warframerepo.entity.ItemOrder
+import com.fukajima.warframerepo.entity.ItemOrderEditRequest
+import com.fukajima.warframerepo.entity.ItemOrderEditResponse
 import com.fukajima.warframerepo.entity.ItemOrderV2
 import com.fukajima.warframerepo.entity.PlaceOrderRequest
 import com.fukajima.warframerepo.entity.Response
@@ -25,5 +27,17 @@ class ItemOrderRepository(val context: Context) {
 
     fun getItemOrdersV2(item_url_name: String): Response<List<ItemOrderV2>> {
         return Remote(context).getOrdersByItemV2(item_url_name)
+    }
+
+    fun soldItemOrder(quantity: Int, jwt: String, id: String): ResponseGeneric{
+        return Remote(context).soldItemOrder(quantity, jwt, id)
+    }
+
+    fun editItemOrder(order:ItemOrderEditRequest, jwt: String, id: String): ResponseGeneric{
+        return Remote(context).editItemOrder(order, jwt, id)
+    }
+
+    fun deleteItemOrder(id: String, jwt: String): ResponseGeneric{
+        return Remote(context).deleteItemOrder(id, jwt)
     }
 }

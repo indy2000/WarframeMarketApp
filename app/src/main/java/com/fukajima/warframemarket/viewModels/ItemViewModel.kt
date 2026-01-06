@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 class ItemViewModel(application: Application) : AndroidViewModel(application) {
 
     var itemLiveData = MutableLiveData<Response<List<Item>>>()
+    var itemDbLiveData = MutableLiveData<Item>()
 
 
     @Deprecated("API está retornando HTTP 404. Utilizar a v2.")
@@ -55,6 +56,11 @@ class ItemViewModel(application: Application) : AndroidViewModel(application) {
         }
 
         return item
+    }
+
+    fun getItemById(id: String) = GlobalScope.launch(Dispatchers.IO){
+        var retorno = ItemRepository(getApplication()).getItemById(id)
+        itemDbLiveData.postValue(retorno)
     }
 
 }
