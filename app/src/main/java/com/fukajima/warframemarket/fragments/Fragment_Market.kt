@@ -36,6 +36,7 @@ import com.fukajima.warframemarket.viewModels.ItemViewModel
 import com.fukajima.warframerepo.entity.Item
 import com.fukajima.warframerepo.entity.ItemOrder
 import com.fukajima.warframerepo.entity.PlaceOrderRequest
+import com.fukajima.warframerepo.repository.ItemRepository
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.squareup.picasso.Picasso
@@ -90,6 +91,7 @@ class Fragment_Market : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
 
         progress = view.findViewById(R.id.loading_frag_market)
         shimmerSpinner = view.findViewById(R.id.market_shimmer_spinner)

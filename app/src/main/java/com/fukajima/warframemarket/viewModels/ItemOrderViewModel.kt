@@ -3,6 +3,7 @@ package com.fukajima.warframemarket.viewModels
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import com.fukajima.warframerepo.entity.Item
 import com.fukajima.warframerepo.entity.ItemData
 import com.fukajima.warframerepo.entity.ItemOrder
 import com.fukajima.warframerepo.entity.ItemOrderUser
@@ -11,6 +12,7 @@ import com.fukajima.warframerepo.entity.PlaceOrderRequest
 import com.fukajima.warframerepo.entity.Response
 import com.fukajima.warframerepo.entity.ResponseGeneric
 import com.fukajima.warframerepo.repository.ItemOrderRepository
+import com.fukajima.warframerepo.repository.ItemRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -35,7 +37,21 @@ class ItemOrderViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun getItemOrderSignInUser(jwt:String) = GlobalScope.launch(Dispatchers.IO){
         val retorno = ItemOrderRepository(getApplication()).getItemOrderSignInUser(jwt)
+        retorno.obj?.map { convertItemOrderNameToSignUser(it) }
+
         userItemOrderLiveData.postValue(retorno)
+    }
+
+    fun convertItemOrderNameToSignUser(item: ItemData): ItemData{
+        if (item.id.isNullOrEmpty().not()){
+            var itemFromDb = ItemRepository(getApplication()).getItemById(item.itemId)
+
+            itemFromDb.item_name?.let{ item_name ->
+                item.item_name = item_name
+            }
+        }
+
+        return item
     }
 
     fun getItemOrdersV2(url_name : String) = GlobalScope.launch(Dispatchers.IO) {
@@ -62,6 +78,7 @@ class ItemOrderViewModel(application: Application) : AndroidViewModel(applicatio
             this.visible = itemOrderV2.visible ?: false
             this.creation_date = itemOrderV2.createdAt
             this.last_update = itemOrderV2.updatedAt
+            this.quantity = itemOrderV2.quantity
             this.user = ItemOrderUser().apply {
                 this.id = itemOrderV2.user?.id
                 this.avatar = itemOrderV2.user?.avatar

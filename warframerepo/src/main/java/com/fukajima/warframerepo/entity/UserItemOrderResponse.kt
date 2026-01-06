@@ -1,19 +1,20 @@
 package com.fukajima.warframerepo.entity
 
 data class UserItemOrderResponse (
-    val apiVersion: String,
-    val data: List<ItemData>? = null,
-    val error: String?
+    var apiVersion: String,
+    var data: List<ItemData>? = null,
+    var error: String?
 )
 
 data class ItemData(
-    val id: String,
-    val type: String,
-    val platinum: Int,
-    val quantity: Int,
-    val perTrade: Int,
-    val visible: Boolean,
-    val createdAt: String,
-    val updatedAt: String,
-    val itemId: String
+    var id: String,
+    var type: String,
+    var platinum: Int,
+    var quantity: Int,
+    var perTrade: Int,
+    var visible: Boolean,
+    var createdAt: String,
+    var updatedAt: String,
+    var itemId: String,
+    var item_name: String?,
 )

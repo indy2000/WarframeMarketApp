@@ -10,6 +10,8 @@ import io.reactivex.Maybe
 
 class ItemRepository(val context: Context) {
 
+    var itemDao = ItemDataBase.getDataBase(context).itemDao()
+
     @Deprecated("API está retornando HTTP 404. Utilizar a v2.")
      fun getItems(): Response<List<Item>> {
             return Remote(context).getItems()
@@ -17,4 +19,17 @@ class ItemRepository(val context: Context) {
     fun getItemsV2(): Response<List<ItemDataV2>> {
             return Remote(context).getItemsV2()
      }
+
+    fun insertItemOnDataBase(item:List<Item>){
+        itemDao.insertAllItems(item)
+    }
+
+    fun deleteAll(){
+        itemDao.deleteAll()
+    }
+
+    fun getItemById(id: String): Item{
+        return itemDao.getItemById(id)
+    }
+
 }
