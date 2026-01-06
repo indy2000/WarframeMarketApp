@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import com.fukajima.warframerepo.entity.Item
 import com.fukajima.warframerepo.entity.ItemData
 import com.fukajima.warframerepo.entity.ItemOrder
+import com.fukajima.warframerepo.entity.ItemOrderEditRequest
+import com.fukajima.warframerepo.entity.ItemOrderEditResponse
 import com.fukajima.warframerepo.entity.ItemOrderUser
 import com.fukajima.warframerepo.entity.ItemOrderV2
 import com.fukajima.warframerepo.entity.PlaceOrderRequest
@@ -23,6 +25,9 @@ class ItemOrderViewModel(application: Application) : AndroidViewModel(applicatio
     var itemOrderV2LiveData = MutableLiveData<Response<List<ItemOrder>>>()
     var placeOrderLiveData = MutableLiveData<ResponseGeneric>()
     var userItemOrderLiveData = MutableLiveData<Response<List<ItemData>>>()
+    var soldItemOrderLiveData = MutableLiveData<ResponseGeneric>()
+    var editItemOrderLiveData = MutableLiveData<ResponseGeneric>()
+    var deleteItemOrderLiveData = MutableLiveData<ResponseGeneric>()
 
     @Deprecated("API está retornando HTTP 404. Utilizar a v2.")
     fun getItemOrders(url_name : String) = GlobalScope.launch(Dispatchers.IO) {
@@ -33,6 +38,21 @@ class ItemOrderViewModel(application: Application) : AndroidViewModel(applicatio
     fun setItemOrder(order:PlaceOrderRequest, jwt: String) = GlobalScope.launch(Dispatchers.IO){
         val retorno = ItemOrderRepository(getApplication()).setItemOrder(order, jwt)
         placeOrderLiveData.postValue(retorno)
+    }
+
+    fun soldItemOrder(quantity: Int, jwt:String, id: String) = GlobalScope.launch(Dispatchers.IO){
+        val retorno = ItemOrderRepository(getApplication()).soldItemOrder(quantity, jwt, id)
+        soldItemOrderLiveData.postValue(retorno)
+    }
+
+    fun editItemOrder(order:ItemOrderEditRequest, jwt: String, id: String) = GlobalScope.launch(Dispatchers.IO){
+        val retorno = ItemOrderRepository(getApplication()).editItemOrder(order, jwt, id)
+        editItemOrderLiveData.postValue(retorno)
+    }
+
+    fun deleteItemOrder(id: String, jwt: String) = GlobalScope.launch(Dispatchers.IO){
+        val retorno = ItemOrderRepository(getApplication()).deleteItemOrder(id, jwt)
+        deleteItemOrderLiveData.postValue(retorno)
     }
 
     fun getItemOrderSignInUser(jwt:String) = GlobalScope.launch(Dispatchers.IO){
