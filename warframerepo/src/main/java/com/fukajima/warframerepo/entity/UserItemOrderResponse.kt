@@ -17,4 +17,5 @@ data class ItemData(
     var updatedAt: String,
     var itemId: String,
     var item_name: String?,
+    var itemImage: String?
 )

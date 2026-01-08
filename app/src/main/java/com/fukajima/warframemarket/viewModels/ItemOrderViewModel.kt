@@ -66,8 +66,9 @@ class ItemOrderViewModel(application: Application) : AndroidViewModel(applicatio
         if (item.id.isNullOrEmpty().not()){
             var itemFromDb = ItemRepository(getApplication()).getItemById(item.itemId)
 
-            itemFromDb.item_name?.let{ item_name ->
-                item.item_name = item_name
+            itemFromDb.let{ item_updated ->
+                item.item_name = item_updated.item_name
+                item.itemImage = item_updated.getItemAssetUrl()
             }
         }
 
