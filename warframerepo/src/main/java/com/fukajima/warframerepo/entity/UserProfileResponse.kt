@@ -8,33 +8,39 @@ data class UserProfileResponse(
 )
 
 
-data class UserData(
-    val id: String,
-    val role: String,
-    val tier: String,
-    val subscription: Boolean,
-    val ingameName: String,
-    val slug: String,
-    val about: String,
-    val aboutRaw: String,
-    val reputation: Int,
-    val masteryRank: Int,
-    val credits: Int,
-    val lastSeen: String,
-    val platform: String,
-    val crossplay: Boolean,
-    val locale: String,
-    val theme: String,
-    val syncLocale: Boolean,
-    val syncTheme: Boolean,
-    val verification: Boolean,
-    val checkCode: String,
-    val createdAt: String,
-    val reviewsLeft: Int,
-    val unreadNotifications: Int,
-    val linkedAccounts: LinkedAccounts,
-    val hasEmail: Boolean
-    )
+class UserData{
+    val id: String? = null
+    val role: String? = null
+    val tier: String? = null
+    val subscription: Boolean? = null
+    val ingameName: String? = null
+    val slug: String? = null
+    val avatar: String? = null
+    val about: String? = null
+    val aboutRaw: String? = null
+    val reputation: Int? = null
+    val masteryRank: Int? = null
+    val credits: Int? = null
+    val lastSeen: String? = null
+    val platform: String? = null
+    val crossplay: Boolean? = null
+    val locale: String? = null
+    val theme: String? = null
+    val syncLocale: Boolean? = null
+    val syncTheme: Boolean? = null
+    val verification: Boolean? = null
+    val checkCode: String? = null
+    val createdAt: String? = null
+    val reviewsLeft: Int? = null
+    val unreadNotifications: Int? = null
+    val linkedAccounts: LinkedAccounts? = null
+    val hasEmail: Boolean? = null
+
+    fun getUserAvatarAssetUrl() : String? {
+        return if(!this.avatar.isNullOrEmpty()) "https://warframe.market/static/assets/${this.avatar}" else null
+    }
+}
+
 
 data class ProfileLinkedAccounts(
     val steam: Boolean,

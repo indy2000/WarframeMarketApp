@@ -14,12 +14,14 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ListView
+import android.widget.ProgressBar
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.compose.material3.Snackbar
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
@@ -27,6 +29,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.fukajima.warframemarket.CacheJWT
 import com.fukajima.warframemarket.R
 import com.fukajima.warframemarket.components.CustomSpinner
@@ -44,6 +47,12 @@ import com.fukajima.warframerepo.entity.UserData
 import com.google.android.material.button.MaterialButton
 import com.squareup.picasso.Picasso
 import org.w3c.dom.Text
+import com.fukajima.warframemarket.utils.changePicassoPic
+import com.fukajima.warframerepo.repository.ItemRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -62,9 +71,13 @@ class Fragment_Profile : Fragment() {
     var txtReputation: TextView? = null
     var txtPlatform: TextView? = null
     var txtLanguage: TextView? = null
+    var shimmer: ShimmerFrameLayout? = null
+    var userProfileLayout: ConstraintLayout? = null
     var recyclerView: RecyclerView? = null
+    var loadingProfileBar: ProgressBar? = null
     var list: MutableList<ItemData> = mutableListOf()
     var dialogEditOrder: AlertDialog? = null
+    var profileAvatar: String? = null
 
     val profileViewModel: ProfileViewModel by lazy {
         ViewModelProvider(this@Fragment_Profile).get(ProfileViewModel::class.java)
@@ -100,10 +113,15 @@ class Fragment_Profile : Fragment() {
         txtReputation = view.findViewById(R.id.txt_fragment_profile_reputation)
         txtPlatform = view.findViewById(R.id.txt_fragment_profile_platform)
         txtLanguage = view.findViewById(R.id.txt_fragment_profile_language)
+        shimmer = view.findViewById(R.id.profile_shimmer)
+        userProfileLayout = view.findViewById(R.id.contraint_fragment_profile)
+        loadingProfileBar = view.findViewById(R.id.loading_frag_profile)
+        var imgProfile: ImageView = view.findViewById(R.id.image_view_fragment_profile)
         recyclerView = view.findViewById(R.id.recycler_fragment_profile)
 
         recyclerView?.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
+        shimmer?.startShimmer()
         profileViewModel.getUserProfile(CacheJWT().getJWT(requireContext()))
 
         profileViewModel.profileLiveData.observe(viewLifecycleOwner) { responseApi ->
@@ -113,6 +131,12 @@ class Fragment_Profile : Fragment() {
                 txtReputation?.text = responseApi.obj!!.reputation.toString()
                 txtPlatform?.text = responseApi.obj!!.platform
                 txtLanguage?.text = responseApi.obj!!.locale
+                profileAvatar = responseApi.obj!!.getUserAvatarAssetUrl()
+                imgProfile.changePicassoPic(profileAvatar)
+                shimmer?.stopShimmer()
+                shimmer?.visibility = View.GONE
+                userProfileLayout?.visibility = View.VISIBLE
+
 
 
             } else {
@@ -120,12 +144,15 @@ class Fragment_Profile : Fragment() {
             }
         }
 
+        loadingProfileBar?.visibility = View.VISIBLE
         itemOrderViewModel.getItemOrderSignInUser(CacheJWT().getJWT(requireContext()))
 
         itemOrderViewModel.userItemOrderLiveData.observe(viewLifecycleOwner) { userOrderList ->
             if (userOrderList.success) {
                 if (!userOrderList.obj.isNullOrEmpty()) {
                     list = userOrderList.obj!!.toMutableList()
+
+                    loadingProfileBar?.visibility = View.GONE
 
                     recyclerView?.adapter = object : Fragment_Profile.ProfileAdapter(requireContext(), list){
                         override fun handleSoldOrder(quantity: Int, id: String) {
@@ -163,6 +190,7 @@ class Fragment_Profile : Fragment() {
             if(it.success){
                 itemOrderViewModel.getItemOrderSignInUser(CacheJWT().getJWT(requireContext()))
                 Toast.makeText(context,R.string.order_edited, Toast.LENGTH_SHORT).show()
+                dialogEditOrder?.dismiss()
             } else {
                 Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
             }
@@ -200,6 +228,8 @@ class Fragment_Profile : Fragment() {
             holder.txtItemQuantity.text = itemOrder.quantity.toString()
             holder.txtItemName.text = itemOrder.item_name
             holder.txtVisibility.text = if (itemOrder.visible) context.getString(R.string.visible) else context.getString(R.string.hidden)
+            holder.imgProfilePic.changePicassoPic(itemOrder.itemImage)
+
             handleOrderTextColors(holder.txtOrderType.text.toString(), holder.txtOrderType, holder.txtVisibility.text.toString(), holder.txtVisibility)
 
 
@@ -240,7 +270,7 @@ class Fragment_Profile : Fragment() {
         }
 
         inner class ProfileItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            val imgProfilePic = itemView.findViewById<ImageView>(R.id.image_view_fragment_profile)
+            val imgProfilePic = itemView.findViewById<ImageView>(R.id.image_view_card_view_profile)
             val txtOrderType = itemView.findViewById<TextView>(R.id.txt_card_view_fragment_wts)
             val txtItemName = itemView.findViewById<TextView>(R.id.txt_card_view_fragment_item_title)
             val txtItemQuantity = itemView.findViewById<TextView>(R.id.txt_card_view_fragment_item_quantity)
@@ -300,18 +330,15 @@ class Fragment_Profile : Fragment() {
         editItemQuantity.setText(actualOrder.quantity.toString())
         editPricePerUnit.setText(actualOrder.platinum.toString())
         if(actualOrder.visible) radBtnVisible.isChecked = true else radBtnHidden.isChecked = true
+        itemImage.changePicassoPic(actualOrder.itemImage)
+        //itemViewModel.getItemById(actualOrder.itemId)
 
-        itemViewModel.getItemById(actualOrder.itemId)
+        //itemViewModel.itemDbLiveData.observe(viewLifecycleOwner){
+            //if(it != null){
+                //itemImage.changePicassoPic(it.getItemAssetUrl())
+            //}
 
-        itemViewModel.itemDbLiveData.observe(viewLifecycleOwner){
-            if(it != null){
-                Picasso
-                    .get()
-                    .load(it.getItemAssetUrl())
-                    .into(itemImage)
-            }
-
-        }
+        //}
 
         //editItemQuantity.text.toString().toIntOrNull(actualOrder.quantity)
         //editPricePerUnit.text.toString().toIntOrNull(actualOrder.platinum)
@@ -351,6 +378,7 @@ class Fragment_Profile : Fragment() {
         dialogEditOrder?.show()
 
     }
+
 
 
 }
