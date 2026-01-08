@@ -63,6 +63,9 @@ class Fragment_Market : Fragment() {
     var spinnerPlaceOrder: CustomSpinner? = null
 
     var dialogPlaceOrder: AlertDialog? = null
+    var shimmer: ShimmerFrameLayout? = null
+    var txtSpinnerItemName: TextView? = null
+
 
     private var quantitySortingValue = SortOrderEnum.DEFAULT
     private var priceSortingValue = SortOrderEnum.ASCENDING
@@ -177,6 +180,10 @@ class Fragment_Market : Fragment() {
                         visibility = View.GONE
                     }
                 } else if (responseApi.requestCode == 1){
+                    shimmer?.stopShimmer()
+                    txtSpinnerItemName?.visibility = View.VISIBLE
+                    spinnerPlaceOrder?.visibility = View.VISIBLE
+                    shimmer?.visibility = View.GONE
                     spinnerPlaceOrder?.setAdapter("id", arrayOf("item_name"), itemList)
                 }
 
@@ -380,7 +387,9 @@ class Fragment_Market : Fragment() {
         val radBtnBuy = dialogView.findViewById<RadioButton>(R.id.rad_btn_dialog_place_order_buy)
         val editPricePerUnit = dialogView.findViewById<EditText>(R.id.edit_text_dialog_place_order_price)
         val editItemQuantity = dialogView.findViewById<EditText>(R.id.edit_text_dialog_place_order_quantity)
+        txtSpinnerItemName = dialogView.findViewById<TextView>(R.id.txt_view_dialog_place_order_item_name)
         val cache = CacheJWT()
+        shimmer = dialogView.findViewById<ShimmerFrameLayout>(R.id.dialog_place_order_shimmer_spinner)
 
         dialogPlaceOrder = AlertDialog.Builder(requireContext())
             .setView(dialogView)
@@ -414,6 +423,9 @@ class Fragment_Market : Fragment() {
         radBtnSell.isChecked = true
         radBtnVisible.isChecked = true
 
+        txtSpinnerItemName?.visibility = View.INVISIBLE
+        spinnerPlaceOrder?.visibility = View.INVISIBLE
+        shimmer?.startShimmer()
         spinnerPlaceOrder?.setAdapter("id", arrayOf("item_name"), mutableListOf<Item>())
         spinnerPlaceOrder?.setOnSearch(object : CustomSpinner.OnItemSearch {
             override fun onSearch(busca: String?, lista: MutableList<*>?, setar: ListView?): MutableList<*>? {
@@ -427,7 +439,7 @@ class Fragment_Market : Fragment() {
             override fun onItemSelected(position: Int): Int {
                 selectedItem = spinnerPlaceOrder?.selectedItem as Item?
                 selectedItem?.let {
-                    itemName.text = it.item_name
+                    itemName?.text = it.item_name
                     Picasso
                         .get()
                         .load(it.getItemAssetUrl())
