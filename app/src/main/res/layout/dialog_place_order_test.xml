@@ -186,6 +186,30 @@
 
         </com.fukajima.warframemarket.components.CustomSpinner>
 
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/dialog_place_order_shimmer_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="57dp"
+            tools:visibility="visible"
+            app:shimmer_auto_start="false"
+            app:layout_constraintTop_toBottomOf="@+id/rad_group_dialog_place_order_visibility"
+            app:layout_constraintStart_toStartOf="@id/const_layout_dialog_place_order2"
+            android:layout_marginTop="12dp">
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="13dp"
+                android:background="@color/asset_teal"
+                android:layout_marginBottom="10dp"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="33dp"
+                android:background="@color/asset_teal"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                />
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
