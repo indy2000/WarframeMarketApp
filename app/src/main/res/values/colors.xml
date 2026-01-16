@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="asset_purple">#FF9370db</color>
+    <color name="background_color">#ff171e21</color>
+    <color name="dark_background">#ff121212</color>
+    <color name="asset_teal">#FF3c879c</color>
+    <color name="asset_teal_opacity">#3B3c879c</color>
+    <color name="colorPrimary">#1F9DFF</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="gray">#828282</color>
+    <color name="shimmerColor">#C2C2C2</color>
+    <color name="pink">#c34898</color>
+    <color name="grey_item_quantity">#696e70</color>
+    <color name="red">#8b0000</color>
+    <color name="green_user_online">#035c04</color>
+    <color name="grey_reputation">#657f86</color>
+    <color name="green_high_reputation">#01a268</color>
+    <color name="green_high_reputation_opacity">#3B01A268</color>
+    <color name="orange">#b53600</color>
+    <color name="lighter_orange">#FF5722</color>
+    <color name="site_background">#101619</color>
+    <color name="invisible">#00000000</color>
+
+</resources>

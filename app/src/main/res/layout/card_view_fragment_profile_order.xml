@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="8dp"
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="true"
+    android:clickable="true"
+    android:id="@+id/card_view_frag_profile_order"
+    android:backgroundTint="@color/background_color">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="10dp">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/logo_alpha"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/image_view_card_view_profile"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/wanting_to_sell"
+            android:textColor="@color/pink"
+            app:layout_constraintTop_toBottomOf="@id/image_view_card_view_profile"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginHorizontal="28dp"
+            android:id="@+id/txt_card_view_fragment_wts" />
+
+        <TextView
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:text="@string/xaku_prime_set"
+            android:textColor="@color/asset_teal"
+            android:textSize="15sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/image_view_card_view_profile"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="10dp"
+            android:id="@+id/txt_card_view_fragment_item_title"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:scrollHorizontally="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/item_quantity"
+            android:textColor="@color/grey_item_quantity"
+            android:textSize="15sp"
+            app:layout_constraintTop_toBottomOf="@id/txt_card_view_fragment_item_title"
+            app:layout_constraintStart_toEndOf="@id/image_view_card_view_profile"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="2dp"
+            android:id="@+id/txt_card_view_fragment_item_quantity" />
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:src="@drawable/ic_item_quantity"
+            app:tint="@color/grey_item_quantity"
+            app:layout_constraintStart_toEndOf="@id/txt_card_view_fragment_item_quantity"
+            app:layout_constraintTop_toBottomOf="@id/txt_card_view_fragment_item_title"
+            android:layout_marginTop="5dp"
+            android:layout_marginHorizontal="5dp"
+            android:id="@+id/image_view_card_view_profile_item_quantity" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/platinum_quantity"
+            android:textColor="@color/pink"
+            android:textSize="15sp"
+            app:layout_constraintStart_toEndOf="@id/txt_card_view_fragment_wts"
+            app:layout_constraintTop_toBottomOf="@id/txt_card_view_fragment_item_quantity"
+            android:layout_marginStart="30dp"
+            android:id="@+id/txt_card_view_fragment_platinum_quantity"
+            android:layout_marginTop="2dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/platinum_each"
+            android:textColor="@color/pink"
+            android:textSize="15sp"
+            app:layout_constraintStart_toEndOf="@id/txt_card_view_fragment_platinum_quantity"
+            app:layout_constraintTop_toBottomOf="@id/txt_card_view_fragment_item_quantity"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="2dp"
+            android:id="@+id/txt_card_view_fragment_platinum_label"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_profile_order_sold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/asset_teal_opacity"
+            android:text="@string/sold"
+            android:textColor="#FFC1C1C1"
+            app:icon="@drawable/ic_sold"
+            app:iconTint="@color/asset_teal"
+            app:iconGravity="textEnd"
+            android:textAllCaps="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearance="@style/roundedButtonShape"
+            app:strokeColor="@color/asset_teal"
+            app:strokeWidth="1dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="3dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_profile_order_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/asset_teal_opacity"
+            android:text="@string/edit"
+            android:textColor="#FFC1C1C1"
+            app:icon="@drawable/ic_edit"
+            app:iconTint="@color/asset_teal"
+            app:iconGravity="textEnd"
+            android:textAllCaps="false"
+            app:layout_constraintTop_toBottomOf="@id/btn_profile_order_sold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:shapeAppearance="@style/roundedButtonShape"
+            app:strokeColor="@color/asset_teal"
+            app:strokeWidth="1dp"
+            android:layout_marginEnd="10dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/visible"
+            android:textColor="@color/green_user_online"
+            android:textSize="15sp"
+            app:layout_constraintTop_toBottomOf="@id/txt_card_view_fragment_platinum_quantity"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="82dp"
+            android:layout_marginTop="2dp"
+            android:id="@+id/txt_card_view_fragment_visibility"/>
+
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginHorizontal="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt_card_view_fragment_wts"
+            android:src="@drawable/ic_delete"
+            android:background="@color/background_color"
+            app:tint="@color/red"
+            android:tooltipText="@string/delete"
+            android:id="@+id/btn_profile_order_delete"/>
+
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

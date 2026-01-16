@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="@color/background_color">
+
+
+    <ImageView
+        android:id="@+id/custon_spinner_imgImagem"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_margin="15dp"
+        android:contentDescription="imagem"
+        android:scaleType="centerCrop"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/custon_spinner_lblTitulo"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center_horizontal"
+        android:textSize="50sp"
+        android:visibility="gone" />
+
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dip"
+        android:layout_marginBottom="20dp"
+        android:background="@color/asset_teal" />
+
+
+    <EditText
+        android:id="@+id/custon_spinner_txtBusca"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/gray"
+        android:hint="@string/search" />
+
+    <TextView
+        android:id="@+id/custon_spinner_lblNovoValor"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="+ Adicionar Novo"
+        android:textColor="@color/gray"
+        android:padding="10dp"
+        android:textSize="15sp" />
+
+    <ListView
+        android:id="@+id/custon_spinner_lsvValores"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scrollbars="horizontal" />
+</LinearLayout>

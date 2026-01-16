@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <style name="WarframeTextAppearance">
+        <item name="android:fontFamily">@font/warframe_font</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:titleTextColor" >@color/white</item>
+
+    </style>
+
+    <style name="spinnerDropDownItemStyle" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="roundedButtonShape">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+</resources>
