@@ -4,4 +4,7 @@
     <string name="not_possible_return_orders_item">Not possible to return orders for this item</string>
     <string name="not_possible_place_order">Not possible to place order</string>
     <string name="not_possible_to_login">Not possible to Login</string>
+    <string name="riven">Unveiled Riven Mods</string>
+    <string name="kuva">Kuva Lich</string>
+    <string name="sister">Sisters of Parvos</string>
 </resources>

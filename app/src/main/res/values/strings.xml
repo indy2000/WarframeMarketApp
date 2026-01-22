@@ -61,4 +61,11 @@
     <string name="delete_message">Are you sure you want to delete?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="category_of_the_item">Search for the Item Category</string>
+    <string name="weapon_name">Search for the Weapon name</string>
+    <string name="category">Category</string>
+    <string name="weapon">Weapon</string>
+    <string name="riven">Unveiled Riven Mods</string>
+    <string name="kuva">Kuva Lich</string>
+    <string name="sister">Sisters of Parvos</string>
 </resources>

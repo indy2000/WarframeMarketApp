@@ -13,5 +13,12 @@
         <attr name="CustomSpinnerStyle" format="reference" />
     </declare-styleable>
 
+    <declare-styleable name="MultiSelectSpinnerView">
+        <attr name="dropdown_headerSelectAll_text" format="string"/>
+        <attr name="dropdown_footerConfirm_text" format="string"/>
+        <attr name="placeholder_text" format="string"/>
+        <attr name="confirmTextColor" format="color"/>
+    </declare-styleable>
+
 
 </resources>
