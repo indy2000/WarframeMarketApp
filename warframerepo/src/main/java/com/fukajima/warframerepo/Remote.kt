@@ -2,6 +2,8 @@ package com.fukajima.warframerepo
 
 import android.content.Context
 import android.webkit.CookieManager
+import com.fukajima.warframerepo.entity.ContractBaseResponse
+import com.fukajima.warframerepo.entity.ContractWeapon
 import com.fukajima.warframerepo.entity.Item
 import com.fukajima.warframerepo.entity.ItemData
 import com.fukajima.warframerepo.entity.ItemDataV2
@@ -15,6 +17,7 @@ import com.fukajima.warframerepo.entity.ItemOrdersResponse
 import com.fukajima.warframerepo.entity.ItemOrdersResponseV2
 import com.fukajima.warframerepo.entity.ItemsResponse
 import com.fukajima.warframerepo.entity.ItemsResponseV2
+import com.fukajima.warframerepo.entity.KuvaWeapon
 import com.fukajima.warframerepo.entity.LoginResponse
 import com.fukajima.warframerepo.entity.PlaceOrderRequest
 import com.fukajima.warframerepo.entity.PlaceOrderRequestV2
@@ -22,6 +25,8 @@ import com.fukajima.warframerepo.entity.PlaceOrderResponse
 import com.fukajima.warframerepo.entity.PlaceOrderResponseV2
 import com.fukajima.warframerepo.entity.Response
 import com.fukajima.warframerepo.entity.ResponseGeneric
+import com.fukajima.warframerepo.entity.RivenWeapon
+import com.fukajima.warframerepo.entity.SistersWeapon
 import com.fukajima.warframerepo.entity.UserData
 import com.fukajima.warframerepo.entity.UserItemOrderResponse
 import com.fukajima.warframerepo.entity.UserProfileResponse
@@ -401,4 +406,41 @@ class Remote(var context: Context) {
 
         return response
     }
+
+    fun getContractByCategory(category: String) : Response<List<ContractWeapon>> {
+
+        var response: Response<List<ContractWeapon>> = Response<List<ContractWeapon>>()
+        var type = TypeToken.get(ContractBaseResponse::class.java).type
+
+        var url = when(category){
+            context.getString(R.string.sister) -> "${apiBaseUrl.replace("v1","v2")}/sister/weapons"
+            context.getString(R.string.kuva) -> "${apiBaseUrl.replace("v1","v2")}/lich/weapons"
+            context.getString(R.string.riven) -> "${apiBaseUrl.replace("v1","v2")}/riven/weapons"
+            else -> null
+
+        }
+
+
+        try {
+
+            var apiResponse = HttpHelper<ContractBaseResponse>().HttpGet(type, url!!, null, 10)
+
+            if(!apiResponse?.data.isNullOrEmpty()) {
+                response.success = true
+                response.obj = apiResponse?.data
+                response.obj?.forEach { it.weaponName = it.getName() }
+            }
+            else {
+                throw Exception(context.getString(R.string.not_possible_return_items))
+            }
+        }
+        catch (t: Throwable) {
+            response.success = false
+            response.exception = t
+            response.message = context.getString(R.string.not_possible_return_items)
+        }
+
+        return response
+    }
+
 }

@@ -11,19 +11,106 @@
         android:layout_width="match_parent"
         android:orientation="vertical">
 
-        <androidx.appcompat.widget.SearchView
+        <com.fukajima.warframemarket.components.CustomSpinner
+            android:id="@+id/contracts_category_searchSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/search">
+            android:layout_marginBottom="10dp"
+            app:searchDialog="true"
+            app:titleText="@string/category"
+            app:hintText="@string/category_of_the_item"
+            android:layout_marginHorizontal="15dp">
 
-        </androidx.appcompat.widget.SearchView>
+        </com.fukajima.warframemarket.components.CustomSpinner>
+
+        <com.fukajima.warframemarket.components.CustomSpinner
+            android:id="@+id/contracts_weapon_searchSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            app:searchDialog="true"
+            app:titleText="@string/weapon"
+            app:hintText="@string/weapon_name"
+            android:layout_marginHorizontal="15dp">
+
+        </com.fukajima.warframemarket.components.CustomSpinner>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/kuva_sisters_layout_fragment_contracts"
+            android:visibility="gone">
+
+            <com.fukajima.warframemarket.components.CustomSpinner
+                android:id="@+id/contracts_weapon_element_searchSpinner"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                app:searchDialog="true"
+                app:titleText="@string/category"
+                app:hintText="@string/category_of_the_item"
+                android:layout_marginHorizontal="15dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+            </com.fukajima.warframemarket.components.CustomSpinner>
+
+            <com.fukajima.warframemarket.components.CustomSpinner
+                android:id="@+id/contracts_weapon_ephemera_searchSpinner"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                app:searchDialog="true"
+                app:titleText="@string/weapon"
+                app:hintText="@string/weapon_name"
+                android:layout_marginHorizontal="15dp"
+                app:layout_constraintStart_toEndOf="@id/contracts_weapon_element_searchSpinner"
+                app:layout_constraintTop_toTopOf="parent">
+
+            </com.fukajima.warframemarket.components.CustomSpinner>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/weapon_layout_fragment_contracts"
+            android:visibility="gone">
+
+            <com.fukajima.warframemarket.components.MultiSelectSpinnerView
+                android:id="@+id/contracts_weapon_positive_effect_multiSelectSpinner"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+            </com.fukajima.warframemarket.components.MultiSelectSpinnerView>
+
+            <com.fukajima.warframemarket.components.CustomSpinner
+                android:id="@+id/contracts_weapon_negative_effect_searchSpinner"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                app:searchDialog="true"
+                app:titleText="@string/weapon"
+                app:hintText="@string/weapon_name"
+                android:layout_marginHorizontal="15dp"
+                app:layout_constraintStart_toEndOf="@+id/contracts_weapon_positive_effect_multiSelectSpinner"
+                app:layout_constraintTop_toTopOf="parent">
+
+            </com.fukajima.warframemarket.components.CustomSpinner>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:orientation="horizontal"
             android:paddingVertical="10dp"
-            android:paddingHorizontal="15dp">
+            android:paddingHorizontal="15dp"
+            android:visibility="invisible"
+            android:id="@+id/fragment_contracts_item_layout">
             <ImageView
                 android:id="@+id/home_iv_item"
                 android:layout_width="60dp"
@@ -42,25 +129,51 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginBottom="10dp"
                 android:layout_marginStart="20dp"
-                />
-            <TextView
+                android:id="@+id/fragment_contracts_item_layout_item_name"/>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:textSize="15sp"
-                tools:text="Vaulted"
-                android:layout_marginBottom="10dp"
-                android:background="@color/colorPrimary"
-                />
+                app:layout_constraintStart_toEndOf="@+id/fragment_contracts_item_layout_item_name"
+                android:clickable="true"
+                android:id="@+id/layout_fragment_contracts_filter"
+                android:visibility="visible">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_filter"
+                    app:tint="@color/asset_teal"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Filter"
+                    android:textColor="@color/asset_teal"/>
+
+
+            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <include layout="@layout/contracts_sorting_buttons"
+            android:id="@+id/sorting_view_frag_contracts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:visibility="invisible"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/recycler_view_frag_contracts"
             tools:listitem="@layout/card_view_fragment_contracts"
-            android:visibility="gone">
+            android:visibility="invisible">
 
         </androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>
