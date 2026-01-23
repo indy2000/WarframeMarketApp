@@ -274,6 +274,24 @@ public class CustomSpinner extends AppCompatSpinner {
 
     public void setOnItemSelected(CustomSpinner.OnItemSelected itemSelecionado) {
         callBackItemSelected = itemSelecionado;
+
+        if(!searchDialog) {
+            this.setOnItemSelectedListener(new OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
+                    try {
+                        callBackItemSelected.onItemSelected(pos);
+                    } finally {
+
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
+        }
     }
 
     private DialogCustomSpinner.OnItemSelectedListener dialog_callback() {
